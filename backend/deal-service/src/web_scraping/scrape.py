@@ -14,6 +14,9 @@ def get_webscrape_data():
     ## selenium used to scroll to the bottom of the page
     options = Options()
     options.add_argument("--headless")
+    options.add_argument("--no-sandbox")  # This bypasses OS security model (for docker)
+    options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems (for docker)
+    options.add_argument("--disable-gpu") # (for docker)
     driver = webdriver.Chrome(options=options)
 
     driver.get("https://shop.chope.co/collections/best-sellers")

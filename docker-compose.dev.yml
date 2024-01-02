@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  backend-deal-service:
+    build:
+      context: ./backend/deal-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/deal-service
+          target: /app

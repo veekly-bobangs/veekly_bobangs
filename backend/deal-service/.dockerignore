@@ -1,0 +1,46 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+
+# Flask instance folder
+instance/
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+*.cover
+.cache
+.pytest_cache/
+htmlcov/
+
+# System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# If using a requirements file, you don't need source code in the image
+#*.py
+
+# If using SQLite, uncomment these
+#*.db
+#*.sqlite
