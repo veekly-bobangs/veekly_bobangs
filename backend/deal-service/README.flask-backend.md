@@ -1,6 +1,8 @@
 # Quick start
-1. `.\.venv\Scripts\activate`
+1. `python -m venv .venv`
 
-2. `pip install -r requirements.txt`
+2. `.\.venv\Scripts\activate`
 
-3. `python ./src/app.py`
+3. `pip install -r requirements.txt`
+
+4. `python ./src/app.py`
