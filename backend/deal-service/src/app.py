@@ -1,22 +1,13 @@
 from flask import Flask, jsonify
-import celery.states as states
-from celeryUtils.makeCelery import celery
+from web_scraping.scrape import get_webscrape_data
 
 app = Flask(__name__)
 
-scraping_task = celery.send_task('tasks.scrape')
+CACHED_DATA = get_webscrape_data()
 
 @app.route('/get', methods = ['GET'])
 def get_articles():
-    scraping_task_res = celery.AsyncResult(scraping_task.id)
-    if scraping_task_res.state == states.PENDING:
-        return jsonify({"status": "pending"})
-    elif scraping_task_res.state == states.FAILURE:
-        # retry the task
-        scraping_task = celery.send_task('tasks.scrape')
-        return jsonify({"status": "failed"})
-    elif scraping_task_res.state == states.SUCCESS:
-        return jsonify(scraping_task_res.get())
+    return jsonify(CACHED_DATA)
 
 @app.route("/hello", methods=["GET"])
 def say_hello():
