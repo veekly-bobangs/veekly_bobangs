@@ -1,0 +1,19 @@
+FROM --platform=linux/amd64 python:3.10-slim-buster
+
+ENV CELERY_BROKER_URL redis://redis:6379/0
+ENV CELERY_RESULT_BACKEND redis://redis:6379/0
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the requirements.txt file and install Python dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy your Flask application code to the container
+COPY . .
+
+WORKDIR /app/src
+
+# Command to run the Celery worker
+CMD celery -A app.celery worker --loglevel=info
