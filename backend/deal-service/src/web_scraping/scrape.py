@@ -124,11 +124,14 @@ def getPromoLink(deal):
     link = links[0].get('href') # get url to go to the deal page
     return link
 
-def getPromoInfo(deal_soup):
-    infos = deal_soup.select('div.product-desc')
-    info = infos[0].select('strong')[0].text #brief info on deal
-    return info
-
+def getPromoInfo(soup):
+    infos = soup.select('div.product-desc')  # Assuming this returns a list
+    if infos and infos[0].select('strong'):
+        info = infos[0].select('strong')[0].text
+        return info
+    else:
+        # Handle the case where infos is empty or no 'strong' tag is found
+        return None
 def getPromoVouchers(deal_soup):
     # Get voucher details
     vouchers_div = deal_soup.select('div.product-variants.hide-mobile li.child.relative')
