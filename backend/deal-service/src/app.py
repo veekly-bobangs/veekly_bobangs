@@ -7,7 +7,18 @@ CACHED_DATA = get_webscrape_data()
 
 @app.route('/get', methods = ['GET'])
 def get_articles():
-    return jsonify(CACHED_DATA)
+    global scraping_task
+    scraping_task_res = celery.AsyncResult(scraping_task.id)
+    if scraping_task_res.state == states.PENDING:
+        return jsonify({"status": "pending"})
+    elif scraping_task_res.state == states.FAILURE:
+        # retry the task
+        scraping_task = celery.send_task('tasks.scrape')
+        return jsonify({"status": "failed, retrying"})
+    elif scraping_task_res.state == states.SUCCESS:
+        return jsonify(scraping_task_res.get())
+    else:
+        return jsonify({"status": "unknown" + scraping_task_res.state})
 
 @app.route("/hello", methods=["GET"])
 def say_hello():
