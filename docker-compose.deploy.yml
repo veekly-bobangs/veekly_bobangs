@@ -12,6 +12,17 @@ services:
       timeout: 10s
       retries: 3
     restart: always
+  celery-worker:
+    build:
+      context: ./backend/deal-service
+      dockerfile: Dockerfile.celery
+    depends_on:
+      - backend-deal-service
+      - redis
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
   nginx-proxy:
     build: ./backend/nginx
     restart: always
