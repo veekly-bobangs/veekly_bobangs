@@ -1,9 +1,10 @@
 from flask import Flask, jsonify
-from web_scraping.scrape import get_webscrape_data
+import celery.states as states
+from celeryUtils.makeCelery import celery
 
 app = Flask(__name__)
 
-CACHED_DATA = get_webscrape_data()
+scraping_task = celery.send_task('tasks.scrape')
 
 @app.route('/get', methods = ['GET'])
 def get_articles():
