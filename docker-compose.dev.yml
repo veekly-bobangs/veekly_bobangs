@@ -11,3 +11,27 @@ services:
         - action: sync
           path: ./backend/deal-service
           target: /app
+  celery-worker:
+    build:
+      context: ./backend/deal-service
+      dockerfile: Dockerfile.celery
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/deal-service
+          target: /app
+    depends_on:
+      - backend-deal-service
+      - redis
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  selenium-chrome:
+    build:
+      context: ./backend/deal-service
+      dockerfile: Dockerfile.selenium
+    ports:
+      - "4444:4444"
+    shm_size: '2g'
+
