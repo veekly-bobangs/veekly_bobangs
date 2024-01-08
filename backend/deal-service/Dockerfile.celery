@@ -2,18 +2,7 @@ FROM --platform=linux/amd64 python:3.10-slim-buster
 
 ENV CELERY_BROKER_URL redis://redis:6379/0
 ENV CELERY_RESULT_BACKEND redis://redis:6379/0
-
-# Install dependencies for Google Chrome
-RUN apt-get update --fix-missing && apt-get install -y wget gnupg2 unzip \
-    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && apt install -y ./google-chrome-stable_current_amd64.deb
-
-# Download and install ChromeDriver
-RUN wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/120.0.6099.109/linux64/chromedriver-linux64.zip \
-    && unzip chromedriver-linux64.zip \
-    && mv chromedriver-linux64/chromedriver /usr/bin/chromedriver \
-    && rm chromedriver-linux64.zip \
-    && rm -r chromedriver-linux64
+ENV SELENIUM_URL http://selenium-chrome:4444/wd/hub
 
 # Set the working directory
 WORKDIR /app

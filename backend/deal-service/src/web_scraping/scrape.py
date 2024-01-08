@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 from utils.chopeDetails import parseTags
 from utils.addressConverter import getLongLatFromRawAddress, countPostalCodesFromRawAddress
+import os
 
 def get_webscrape_data():
     ## selenium used to scroll to the bottom of the page
@@ -17,8 +18,15 @@ def get_webscrape_data():
     options.add_argument("--no-sandbox")  # This bypasses OS security model (for docker)
     options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems (for docker)
     options.add_argument("--disable-gpu") # (for docker)
-    driver = webdriver.Chrome(options=options)
 
+    driver = None
+    SELENIUM_URL = os.environ.get('SELENIUM_URL', '')
+    if SELENIUM_URL:
+        time.sleep(5) # ensure selenium grid is ready
+        driver = webdriver.Remote(SELENIUM_URL, options=options)
+    else:
+        driver = webdriver.Chrome(options=options) # not running on docker, assume have chrome stuff
+    
     driver.get("https://shop.chope.co/collections/best-sellers")
 
     SCROLL_PAUSE_TIME = 0.5

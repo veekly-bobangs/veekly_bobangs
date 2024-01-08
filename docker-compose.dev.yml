@@ -27,4 +27,11 @@ services:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+  selenium-chrome:
+    build:
+      context: ./backend/deal-service
+      dockerfile: Dockerfile.selenium
+    ports:
+      - "4444:4444"
+    shm_size: '2g'
 

@@ -19,7 +19,7 @@ def get_articles():
     elif scraping_task_res.state == states.SUCCESS:
         return jsonify(scraping_task_res.get())
     else:
-        return jsonify({"status": "unknown" + scraping_task_res.state})
+        return jsonify({"status": "unknown- " + scraping_task_res.state})
 
 @app.route("/hello", methods=["GET"])
 def say_hello():
