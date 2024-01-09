@@ -12,13 +12,17 @@ services:
       timeout: 10s
       retries: 3
     restart: always
+    depends_on:
+      - redis
+      - selenium-chrome
+      - celery-worker
   celery-worker:
     build:
       context: ./backend/deal-service
       dockerfile: Dockerfile.celery
     depends_on:
-      - backend-deal-service
       - redis
+      - selenium-chrome  
   redis:
     image: "redis:alpine"
     ports:
