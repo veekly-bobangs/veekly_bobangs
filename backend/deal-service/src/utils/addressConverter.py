@@ -30,7 +30,11 @@ def getLongLatFromPostal(postal):
     headers = {"Authorization": "**********************"}
     response = requests.request("GET", url, headers=headers)
     # Parse the response text into a dictionary
-    data = json.loads(response.text)
+    try:
+        data = json.loads(response.text)
+    except json.JSONDecodeError as e:
+        print(f"Error: {e}")
+        return None
 
     if data['found'] == 0:
         print("Invalid postal given")

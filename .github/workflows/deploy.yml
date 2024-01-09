@@ -30,5 +30,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/vb-app
+            docker-compose -f ./docker-compose.deploy.yml down
             docker-compose -f ./docker-compose.deploy.yml build
             docker-compose -f ./docker-compose.deploy.yml up -d
