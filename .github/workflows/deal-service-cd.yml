@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'backend/deals-service/**'
+      - 'backend/deal-service/**'
 jobs:
   deploy:
     name: Deploy to EC2 on main branch push
