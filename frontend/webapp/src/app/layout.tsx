@@ -1,6 +1,7 @@
 import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import PageLayout from '@/layout/PageLayout';
 
 export const metadata = {
   title: 'Veekly Bobangs',
@@ -18,7 +19,11 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider>{children}</MantineProvider>
+        <MantineProvider>
+          <PageLayout>
+            {children}
+          </PageLayout>
+        </MantineProvider>
       </body>
     </html>
   );
