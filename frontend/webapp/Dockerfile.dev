@@ -1,0 +1,8 @@
+FROM --platform=linux/amd64 node:18
+
+ENV API_URL http://backend-deal-service:8000
+
+WORKDIR /app
+COPY ./package*.json /app
+RUN  npm install
+COPY . .

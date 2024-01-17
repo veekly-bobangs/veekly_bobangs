@@ -1,7 +1,11 @@
 'use client'
 
 import React from 'react';
-import { AppShell, Burger } from '@mantine/core';
+import {
+  AppShell,
+  Burger,
+  Container,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Navbar from './Navbar';
 
@@ -36,7 +40,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        {children}
+        <Container fluid>
+          {children}
+        </Container>
       </AppShell.Main>
     </AppShell>
   );

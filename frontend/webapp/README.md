@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Copy `.env.example` and rename it to `.env.local`, and fill it up with the backend url.
+
 First, run the development server:
 
 ```bash
