@@ -34,4 +34,18 @@ services:
     ports:
       - "4444:4444"
     shm_size: '2g'
-
+  frontend-webapp:
+    build:
+      context: ./frontend/webapp
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3001"
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/webapp
+          target: /app
+        - action: rebuild
+          path: ./frontend/webapp/package.json
+    depends_on:
+      - backend-deal-service
