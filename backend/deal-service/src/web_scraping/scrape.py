@@ -11,8 +11,8 @@ from utils.chopeDetails import parseTags
 from utils.addressConverter import getLongLatFromRawAddress, countPostalCodesFromRawAddress
 import os
 
-def get_webscrape_data():
-    ## selenium used to scroll to the bottom of the page
+def get_webscrape_data_with_retry(max_retries=3, backoff=20):
+        ## selenium used to scroll to the bottom of the page
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")  # This bypasses OS security model (for docker)
@@ -26,6 +26,21 @@ def get_webscrape_data():
         driver = webdriver.Remote(SELENIUM_URL, options=options)
     else:
         driver = webdriver.Chrome(options=options) # not running on docker, assume have chrome stuff
+
+    retries = 0
+    while retries < max_retries:
+        try:
+            return get_webscrape_data(driver)
+        except Exception as e:
+            retries += 1
+            print(f"Connection error while trying to scrape, retry {retries}/{max_retries}. Error: {e}")
+            time.sleep(backoff)  # Wait for 20 seconds (or backoff seconds) before retrying
+
+    # Optional: raise an exception or return a specific value if all retries fail
+    driver.quit()
+    raise ConnectionError("Failed to complete web scraping after multiple retries.")
+
+def get_webscrape_data(driver):
     
     driver.get("https://shop.chope.co/collections/best-sellers")
 
