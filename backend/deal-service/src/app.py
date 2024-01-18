@@ -1,22 +1,23 @@
 from flask import Flask, jsonify
 import celery.states as states
 from celeryUtils.makeCelery import celery
-from redis import Redis
 from redis.lock import Lock
-from redisConfig import redisClient
+from redisConfig import redisClient, SCRAPE_LOCK, SCRAPE_TASK_ID, SCRAPE_TASK
 
 app = Flask(__name__)
 
 def send_scrape_task(retry=False):
-    lock = Lock(redisClient, "scrape_lock", timeout=30)
+    lock = Lock(redisClient, SCRAPE_LOCK, timeout=30)
     if lock.acquire(blocking=False):
         try:
             if retry:
-                redisClient.delete('scraping_task_id')
-            task_id = redisClient.get('scraping_task_id')
+                redisClient.delete(SCRAPE_TASK_ID)
+            task_id = redisClient.get(SCRAPE_TASK_ID)
             if task_id is None:
-                scraping_task = celery.send_task('tasks.scrape')
-                redisClient.set('scraping_task_id', scraping_task.id)
+                scraping_task = celery.send_task(SCRAPE_TASK)
+                redisClient.set(SCRAPE_TASK_ID, scraping_task.id)
+        except Exception as e:
+            print("Error ending scrape task: ", e)
         finally:
             lock.release()
 
@@ -27,7 +28,7 @@ send_scrape_task()
 
 @app.route('/get', methods = ['GET'])
 def get_articles():
-    scraping_task_id = redisClient.get('scraping_task_id')
+    scraping_task_id = redisClient.get(SCRAPE_TASK_ID)
     if scraping_task_id is None:
         return jsonify({"status": "no scraping task found"})
     
