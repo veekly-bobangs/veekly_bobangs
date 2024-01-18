@@ -3,9 +3,9 @@ import celery.states as states
 from celeryUtils.makeCelery import celery
 from redis import Redis
 from redis.lock import Lock
+from redisConfig import redisClient
 
 app = Flask(__name__)
-redisClient = Redis(host='redis', port=6379, db=0)
 
 def send_scrape_task(retry=False):
     lock = Lock(redisClient, "scrape_lock", timeout=30)

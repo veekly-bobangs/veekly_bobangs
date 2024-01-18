@@ -11,6 +11,10 @@ services:
         - action: sync
           path: ./backend/deal-service
           target: /app
+    depends_on:
+      - redis
+      - selenium-chrome
+      - celery-worker
   celery-worker:
     build:
       context: ./backend/deal-service
@@ -21,8 +25,17 @@ services:
           path: ./backend/deal-service
           target: /app
     depends_on:
-      - backend-deal-service
       - redis
+      - selenium-chrome  
+  flower:
+    build:
+      context: ./backend/deal-service
+      dockerfile: Dockerfile.flower
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+      - celery-worker
   redis:
     image: "redis:alpine"
     ports:
@@ -45,6 +58,8 @@ services:
         - action: sync
           path: ./frontend/webapp
           target: /app
+          ignore: 
+            - node_modules
         - action: rebuild
           path: ./frontend/webapp/package.json
     depends_on:

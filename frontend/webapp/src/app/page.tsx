@@ -7,7 +7,7 @@ export default async function HomePage() {
   return (
     <div>
       <h1>Home Page</h1>
-      <p>Some content</p>
+      {response?.status ? <p>Something is wrong with our server, try again later. status: {response.status}</p> : null}
       {response?.deals ? <NearbyDeals deals={response.deals} /> : null}
     </div>
   );
