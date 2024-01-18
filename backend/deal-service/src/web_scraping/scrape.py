@@ -12,26 +12,25 @@ from utils.addressConverter import getLongLatFromRawAddress, countPostalCodesFro
 import os
 
 def get_webscrape_data_with_retry(max_retries=3, backoff=20):
-        ## selenium used to scroll to the bottom of the page
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")  # This bypasses OS security model (for docker)
     options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems (for docker)
     options.add_argument("--disable-gpu") # (for docker)
 
-    driver = None
-    SELENIUM_URL = os.environ.get('SELENIUM_URL', '')
-    if SELENIUM_URL:
-        time.sleep(5) # ensure selenium grid is ready
-        driver = webdriver.Remote(SELENIUM_URL, options=options)
-    else:
-        driver = webdriver.Chrome(options=options) # not running on docker, assume have chrome stuff
-
     retries = 0
     while retries < max_retries:
+        driver = None
+        SELENIUM_URL = os.environ.get('SELENIUM_URL', '')
+        if SELENIUM_URL:
+            time.sleep(5) # ensure selenium grid is ready
+            driver = webdriver.Remote(SELENIUM_URL, options=options)
+        else:
+            driver = webdriver.Chrome(options=options) # not running on docker, assume have chrome stuff
         try:
             return get_webscrape_data(driver)
         except Exception as e:
+            driver.quit()
             retries += 1
             print(f"Connection error while trying to scrape, retry {retries}/{max_retries}. Error: {e}")
             time.sleep(backoff)  # Wait for 20 seconds (or backoff seconds) before retrying
