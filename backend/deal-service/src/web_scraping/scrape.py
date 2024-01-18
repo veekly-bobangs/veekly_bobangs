@@ -75,6 +75,7 @@ def get_webscrape_data():
     
         promos_adjusted = apply_offsets(promos)
     
+    driver.quit()
     # return promos
     return promos_adjusted
 
