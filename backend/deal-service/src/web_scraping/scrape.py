@@ -36,7 +36,6 @@ def get_webscrape_data_with_retry(max_retries=3, backoff=20):
             time.sleep(backoff)  # Wait for 20 seconds (or backoff seconds) before retrying
 
     # Optional: raise an exception or return a specific value if all retries fail
-    driver.quit()
     raise ConnectionError("Failed to complete web scraping after multiple retries.")
 
 def get_webscrape_data(driver):
