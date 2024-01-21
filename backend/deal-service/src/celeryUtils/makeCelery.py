@@ -8,6 +8,7 @@ CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localho
 
 celery = Celery('tasks', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
+#TODO: add retry logic on failure
 @celery.task(name=SCRAPE_TASK)
 def celeryWebscrape():
     return get_webscrape_data_with_retry()

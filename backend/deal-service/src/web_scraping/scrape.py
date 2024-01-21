@@ -36,58 +36,89 @@ def get_webscrape_data_with_retry(max_retries=3, backoff=20):
             time.sleep(backoff)  # Wait for 20 seconds (or backoff seconds) before retrying
 
     # Optional: raise an exception or return a specific value if all retries fail
-    driver.quit()
     raise ConnectionError("Failed to complete web scraping after multiple retries.")
 
 def get_webscrape_data(driver):
     
-    driver.get("https://shop.chope.co/collections/best-sellers")
-
+    try:
+        driver.get("https://shop.chope.co/collections/best-sellers")
+    except Exception as e:
+        print("Error getting url: ", e)
+        driver.quit()
+        return None
+    
     SCROLL_PAUSE_TIME = 0.5
 
-    # Get the height of the page
-    last_height = driver.execute_script("return document.body.scrollHeight")
-
+    try:
+        # Get the height of the page
+        last_height = driver.execute_script("return document.body.scrollHeight")
+    except Exception as e:
+        print("Error getting page height: ", e)
+        driver.quit()
+        return None
+    
     while True:
-        # Scroll to the bottom of the page
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        try:
+            # Scroll to the bottom of the page
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-        time.sleep(SCROLL_PAUSE_TIME)
+            time.sleep(SCROLL_PAUSE_TIME)
 
-        # Calculate new height and check if we have reached the end of the page
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        
-        last_height = new_height
+            # Calculate new height and check if we have reached the end of the page
+            new_height = driver.execute_script("return document.body.scrollHeight")
+            if new_height == last_height:
+                break
+            
+            last_height = new_height
+
+        except Exception as e:
+            print("Error scrolling to bottom of page: ", e)
+            driver.quit()
+            return None
 
     page_source = driver.page_source
-    soup = BeautifulSoup(page_source, 'html.parser')
+    try:
+        soup = BeautifulSoup(page_source, 'html.parser')
+    except Exception as e:
+        print("Error parsing page source: ", e)
+        driver.quit()
+        return None
 
     # getting the relevant data
-    all_deals = soup.find(id = 'bc-sf-filter-products')
+    try:
+        all_deals = soup.find(id = 'bc-sf-filter-products')
+    except Exception as e:
+        print("Error finding all deals: ", e)
+        driver.quit()
+        return None
+
     url = 'https://shop.chope.co'
     promos = []
 
     for deal in all_deals:
-        title = getPromoTitle(deal)
-        link = getPromoLink(deal)
+        try:
+            title = getPromoTitle(deal)
+            link = getPromoLink(deal)
+            
+            deal_link = url+link
+            deal_page = requests.get(deal_link)
+            deal_soup = BeautifulSoup(deal_page.content, 'html.parser')
+            info = getPromoInfo(deal_soup)
+            
+            cur_deal_vouchers = getPromoVouchers(deal_soup)
+
+            addressesAndOpeningHours = getPromoAddressAndOpeningHours(deal_soup)
+
+            tagsList = getPromoTags(deal_soup)        
+            image_url = getPromoImageUrl(deal)
+
+            appendPromoGivenData(promos, title, info, addressesAndOpeningHours, image_url, tagsList, cur_deal_vouchers, deal_link)
         
-        deal_link = url+link
-        deal_page = requests.get(deal_link)
-        deal_soup = BeautifulSoup(deal_page.content, 'html.parser')
-        info = getPromoInfo(deal_soup)
-        
-        cur_deal_vouchers = getPromoVouchers(deal_soup)
-
-        addressesAndOpeningHours = getPromoAddressAndOpeningHours(deal_soup)
-
-        tagsList = getPromoTags(deal_soup)        
-        image_url = getPromoImageUrl(deal)
-
-        appendPromoGivenData(promos, title, info, addressesAndOpeningHours, image_url, tagsList, cur_deal_vouchers, deal_link)
-    
-        promos_adjusted = apply_offsets(promos)
+            promos_adjusted = apply_offsets(promos)
+        except Exception as e:
+            # Skip this deal if there is an error
+            print("Error getting promo data: ", e)
+            continue
     
     driver.quit()
     # return promos
