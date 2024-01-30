@@ -96,6 +96,11 @@ def get_webscrape_data(driver):
     promos = []
 
     for deal in all_deals:
+        # Add buffer time if scraping on AWS
+        isDev = os.environ.get('IS_DEVELOPMENT', False)
+        if not isDev:
+            time.sleep(1)
+
         try:
             title = getPromoTitle(deal)
             link = getPromoLink(deal)
