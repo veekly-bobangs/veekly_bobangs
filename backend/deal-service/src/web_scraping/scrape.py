@@ -96,6 +96,7 @@ def get_webscrape_data(driver):
     promos = []
 
     for deal in all_deals:
+        time.sleep(0.8)
         try:
             title = getPromoTitle(deal)
             link = getPromoLink(deal)
