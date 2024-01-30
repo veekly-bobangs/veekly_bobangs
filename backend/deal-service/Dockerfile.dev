@@ -3,6 +3,7 @@ FROM --platform=linux/amd64 python:3.10-slim-buster
 ENV CELERY_BROKER_URL redis://redis:6379/0
 ENV CELERY_RESULT_BACKEND redis://redis:6379/0
 ENV SELENIUM_URL http://selenium-chrome:4444/wd/hub
+ENV IS_DEVELOPMENT True
 
 WORKDIR /app
 COPY ./requirements.txt /app

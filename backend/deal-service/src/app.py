@@ -3,6 +3,7 @@ import celery.states as states
 from celeryUtils.makeCelery import celery
 from redis.lock import Lock
 from redisConfig import redisClient, SCRAPE_LOCK, SCRAPE_TASK_ID, SCRAPE_TASK
+import os
 
 app = Flask(__name__)
 
@@ -53,4 +54,8 @@ def flask_health_check():
 	return "success", 200
 
 if __name__ == "__main__":
+    isDev = os.environ.get('IS_DEVELOPMENT', False)
+    if isDev:
+        print("Running in dev mode")
+    print("Starting Flask app")
     app.run(host="0.0.0.0", port=8000)
