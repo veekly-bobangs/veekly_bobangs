@@ -25,7 +25,14 @@ export default function DealCard({ deal }: DealCardProps) {
     <Stack justify="space-between" mt="md" mb="xs">
       <Text fw={500}>{deal.title}</Text>
       <Group gap="xs">
-        {deal.tags.map((tag, index) => <Badge color={TAG_COLOURS[index%(TAG_COLOURS.length)]}>{tag}</Badge>)}
+        {deal.tags.map((tag, index) =>
+          <Badge
+            key={index}
+            color={TAG_COLOURS[index%(TAG_COLOURS.length)]}
+          >
+            {tag}
+          </Badge>
+        )}
       </Group>
     </Stack>
 

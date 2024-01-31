@@ -100,7 +100,7 @@ export default function NearbyDeals({ deals }: NearbyDealsProps) {
         mt="md"
         cols={{ base: 1, sm: 2, lg: 3 }}>
         {nearbyDeals.map((deal) => (
-          <DealCard deal={deal} />
+          <DealCard key={deal.id} deal={deal} />
         ))}
       </SimpleGrid>
     </Stack>
