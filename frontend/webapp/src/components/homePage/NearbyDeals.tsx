@@ -1,12 +1,13 @@
 'use client'
-import React, { use } from 'react';
+import React from 'react';
 import {
-  Grid,
+  SimpleGrid,
   Slider,
   Stack,
   Text,
 } from '@mantine/core';
-import { Deal, Voucher } from '@/utils/staticDealFetch'
+import { Deal } from '@/utils/staticDealFetch'
+import { DealCard} from '@/components/common';
 
 function getDistanceFromLatLongInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the earth in km
@@ -89,20 +90,19 @@ export default function NearbyDeals({ deals }: NearbyDealsProps) {
         step={100}
         label={radius}
         labelAlwaysOn
+        size='xl'
         marks = {[
           { value: 100, label: '100m' },
           { value: 2000, label: '2km' },
         ]}
       />
-      <Grid>
+      <SimpleGrid
+        mt="md"
+        cols={{ base: 1, sm: 2, lg: 3 }}>
         {nearbyDeals.map((deal) => (
-          <Grid.Col key={deal.id} span={4}>
-            <p>{deal.id}</p>
-            <p>{deal.title}</p>
-            <p>{deal.info}</p>
-          </Grid.Col>
+          <DealCard deal={deal} />
         ))}
-      </Grid>
+      </SimpleGrid>
     </Stack>
   );
 }
