@@ -1,0 +1,11 @@
+FROM --platform=linux/amd64 node:18
+
+ENV API_URL http://52.76.226.5
+
+WORKDIR /app
+COPY ./package*.json /app
+RUN  npm install
+COPY . .
+EXPOSE 3001
+RUN npm r
+CMD ["npm", "start"]

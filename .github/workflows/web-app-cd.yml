@@ -1,0 +1,47 @@
+name: Push-to-GCP
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/webapp/**'
+
+jobs:
+  deploy:
+    name: Deploy to GCP on main branch push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cleanup Old Files on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCP_HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.GCP_SSH_KEY }}
+          script: |
+            cd /home/bokuan2000/vb-app
+            docker-compose -f ./docker-compose.web-app-deploy.yml down
+            rm -rf *
+
+      - name: Deploy to GCP
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GCP_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.GCP_HOST_DNS }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.GCP_TARGET_DIR }}
+
+      - name: Run Docker Compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCP_HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.GCP_SSH_KEY }}
+          script: |
+            cd /home/bokuan2000/vb-app
+            docker-compose -f ./docker-compose.web-app-deploy.yml build
+            docker-compose -f ./docker-compose.web-app-deploy.yml up -d
