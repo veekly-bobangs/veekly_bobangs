@@ -79,6 +79,8 @@ def get_webscrape_data(driver):
     page_source = driver.page_source
     try:
         soup = BeautifulSoup(page_source, 'html.parser')
+        print("Successfully parsed page source, quitting selenium driver")
+        driver.quit()
     except Exception as e:
         print("Error parsing page source: ", e)
         driver.quit()
@@ -125,7 +127,6 @@ def get_webscrape_data(driver):
             print("Error getting promo data: ", e)
             continue
     
-    driver.quit()
     # return promos
     return promos_adjusted
 
