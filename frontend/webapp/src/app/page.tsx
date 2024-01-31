@@ -1,4 +1,4 @@
-import NearbyDeals from '@/components/homePage/NearbyDeals';
+import { NearbyDeals } from '@/components/homePage'
 import { fetchDealsStatic } from '@/utils/staticDealFetch';
 
 export default async function HomePage() {
