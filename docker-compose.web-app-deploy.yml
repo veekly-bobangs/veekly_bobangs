@@ -1,8 +1,19 @@
 version: '3.8'
 services:
   web-app:
-    build:
-      context: ./frontend/webapp
-      dockerfile: Dockerfile.prod
+    image: bokuan/veekly-bobangs-clockbox:latest
     ports:
       - "3001:3001"
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/nginx/default.conf:/tmp/default.conf
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:80/health-check || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    environment:
+      - WEB_APP_ADDR=web-app:3001

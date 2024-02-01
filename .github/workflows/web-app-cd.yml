@@ -8,15 +8,37 @@ on:
       - 'frontend/webapp/**'
 
 jobs:
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend/webapp
+        file: ./Dockerfile.prod
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/veekly-bobangs-clockbox:latest
+      
   deploy:
-    name: Deploy to GCP on main branch push
+    name: Pull main branch and pull docker images and start containers
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cleanup Old Files on Server
+      - name: Pull from git and docker hub
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.GCP_HOST_DNS }}
@@ -24,24 +46,12 @@ jobs:
           key: ${{ secrets.GCP_SSH_KEY }}
           script: |
             cd /home/bokuan2000/vb-app
-            docker-compose -f ./docker-compose.web-app-deploy.yml down
-            rm -rf *
+            git fetch
+            git checkout main
+            git pull origin main
+            git reset --hard origin/main
+            docker compose -f docker-compose.web-app-deploy.yml down
+            docker compose -f docker-compose.web-app-deploy.yml pull
+            docker compose -f docker-compose.web-app-deploy.yml up -d
 
-      - name: Deploy to GCP
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GCP_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.GCP_HOST_DNS }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: ${{ secrets.GCP_TARGET_DIR }}
 
-      - name: Run Docker Compose
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.GCP_HOST_DNS }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.GCP_SSH_KEY }}
-          script: |
-            cd /home/bokuan2000/vb-app
-            docker-compose -f ./docker-compose.web-app-deploy.yml build
-            docker-compose -f ./docker-compose.web-app-deploy.yml up -d
