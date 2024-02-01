@@ -4,16 +4,20 @@ services:
     image: bokuan/veekly-bobangs-clockbox:latest
     ports:
       - "3001:3001"
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
+  nginx-web-app:
+    build: ./frontend/nginx
+    restart: always
     volumes:
       - ./frontend/nginx/default.conf:/tmp/default.conf
+    environment: 
+      - WEB_APP_ADDR=web-app:3001
+    ports:
+      - "80:80"
+    depends_on:
+      - web-app
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost:80/health-check || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 3
-    environment:
-      - WEB_APP_ADDR=web-app:3001
+    command: /app/start.sh
