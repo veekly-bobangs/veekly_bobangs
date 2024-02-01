@@ -25,6 +25,28 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 3. `docker compose -f .\docker-compose.dev.yml down` (when exiting)
 
+**Deployment of front end:**
+
+Locally push to docker hub (until CDevelopment in GH actions fixed)
+
+`docker build -t bokuan/veekly-bobangs-clockbox:latest .`
+
+`docker login`
+
+`docker push bokuan/veekly-bobangs-clockbox:latest`
+
+Pull from VM:
+
+`docker compose -f ./docker-compose.web-app-deploy.yml down`
+
+`git pull origin main`
+
+`docker compose -f ./docker-compose.web-app-deploy.yml pull`
+
+`docker compose -f ./docker-compose.web-app-deploy.yml build`
+
+`docker compose -f ./docker-compose.web-app-deploy.yml up`
+
 ### Original code base
 
 [Frontend](https://github.com/bokuanT/veekly-bobangs)
