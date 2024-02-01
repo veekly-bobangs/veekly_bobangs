@@ -36,7 +36,12 @@ Locally push to docker hub (until CDevelopment in GH actions fixed)
 `docker push bokuan/veekly-bobangs-clockbox:latest`
 
 Transfer SSL/TLS certificates:
-`nginx-selfsigned.crt` and `nginx-selfsigned.key` to `./frontend/nginx`
+
+`nginx-selfsigned.crt` and `nginx-selfsigned.key` to `./frontend/nginx` 
+
+or
+
+`openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx-selfsigned.key -out nginx-selfsigned.crt`
 
 Pull from VM:
 
