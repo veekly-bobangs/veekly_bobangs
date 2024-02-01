@@ -30,28 +30,28 @@ jobs:
         file: Dockerfile.prod
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/veekly-bobangs-clockbox:latest
       
-  deploy:
-    name: Pull main branch and pull docker images and start containers
-    runs-on: ubuntu-latest
+  # deploy:
+  #   name: Pull main branch and pull docker images and start containers
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Pull from git and docker hub
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.GCP_HOST_DNS }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.GCP_SSH_KEY }}
-          script: |
-            cd /home/bokuan2000/vb-app
-            git fetch
-            git checkout main
-            git pull origin main
-            git reset --hard origin/main
-            docker compose -f docker-compose.web-app-deploy.yml down
-            docker compose -f docker-compose.web-app-deploy.yml pull
-            docker compose -f docker-compose.web-app-deploy.yml up -d
+  #     - name: Pull from git and docker hub
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.GCP_HOST_DNS }}
+  #         username: ${{ secrets.USERNAME }}
+  #         key: ${{ secrets.GCP_SSH_KEY }}
+  #         script: |
+  #           cd /home/bokuan2000/vb-app
+  #           git fetch
+  #           git checkout main
+  #           git pull origin main
+  #           git reset --hard origin/main
+  #           docker compose -f docker-compose.web-app-deploy.yml down
+  #           docker compose -f docker-compose.web-app-deploy.yml pull
+  #           docker compose -f docker-compose.web-app-deploy.yml up -d
 
 
