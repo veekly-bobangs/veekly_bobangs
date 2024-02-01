@@ -35,6 +35,9 @@ Locally push to docker hub (until CDevelopment in GH actions fixed)
 
 `docker push bokuan/veekly-bobangs-clockbox:latest`
 
+Transfer SSL/TLS certificates:
+`nginx-selfsigned.crt` and `nginx-selfsigned.key` to `./frontend/nginx`
+
 Pull from VM:
 
 `docker compose -f ./docker-compose.web-app-deploy.yml down`
