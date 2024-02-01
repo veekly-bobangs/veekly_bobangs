@@ -13,6 +13,7 @@ services:
       - WEB_APP_ADDR=web-app:3001
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - web-app
     healthcheck:
