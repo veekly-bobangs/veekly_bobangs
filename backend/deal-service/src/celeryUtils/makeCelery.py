@@ -32,4 +32,3 @@ def celeryWebscrape():
     res = get_webscrape_data_with_retry()
     redisClient.set(SCRAPE_RES, json.dumps(res))
     redisClient.set(SCRAPE_RES_TIME, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-
