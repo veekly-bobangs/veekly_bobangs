@@ -29,7 +29,7 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 Locally push to docker hub (until CDevelopment in GH actions fixed)
 
-`docker build -t bokuan/veekly-bobangs-clockbox:latest .`
+`docker build -t bokuan/veekly-bobangs-clockbox:latest . -f .\Dockerfile.prod`
 
 `docker login`
 
