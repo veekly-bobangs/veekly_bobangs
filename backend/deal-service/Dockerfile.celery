@@ -17,4 +17,4 @@ COPY . .
 WORKDIR /app/src
 
 # Command to run the Celery worker
-CMD celery -A app.celery worker --loglevel=info
+CMD celery -A app.celery worker -B --loglevel=info
