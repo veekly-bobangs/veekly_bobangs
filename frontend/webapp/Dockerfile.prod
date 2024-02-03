@@ -1,6 +1,6 @@
 FROM --platform=linux/amd64 node:18
 
-ENV API_URL http://52.76.226.5
+ENV API_URL http://13.215.200.201
 
 WORKDIR /app
 COPY ./package*.json /app

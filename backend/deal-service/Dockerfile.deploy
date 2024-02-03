@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 COPY . .
 EXPOSE 8000
 
-CMD gunicorn --chdir /app/src -w 2 -t 65 -b 0.0.0.0:8000 app:app
+CMD gunicorn --chdir /app/src --workers 2 --max-requests 1000 --max-requests-jitter 200 -t 65 -b 0.0.0.0:8000 app:app
