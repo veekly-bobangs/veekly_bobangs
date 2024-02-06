@@ -7,7 +7,7 @@ import {
   Text,
 } from '@mantine/core';
 import { Deal } from '@/utils/staticDealFetch'
-import { DealCard} from '@/components/common';
+import { DealCard } from '@/components/common';
 
 function getDistanceFromLatLongInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Radius of the earth in km
@@ -81,6 +81,7 @@ export default function NearbyDeals({ deals }: NearbyDealsProps) {
     
   return (
     <Stack>
+      <Text>Nearby Deals</Text>
       <Text>{error}</Text>
       <Slider
         value={radius}
