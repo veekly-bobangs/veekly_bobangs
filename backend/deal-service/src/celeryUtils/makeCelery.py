@@ -15,7 +15,7 @@ celery = Celery('tasks', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND
 celery.conf.beat_schedule = {
     'webscrape-every-5-mins': {
         'task': SCRAPE_TASK,
-        'schedule': crontab(minute=5)
+        'schedule': crontab(minute='*/5')
     }
 }
 celery.conf.timezone = 'UTC'
