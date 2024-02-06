@@ -19,6 +19,7 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 ## Quick start
 
 **Development:**
+
 1. `docker compose -f .\docker-compose.dev.yml build`
 
 2. `docker compose -f .\docker-compose.dev.yml watch` (hot reload enabled)
@@ -54,6 +55,12 @@ Pull from VM:
 `docker compose -f ./docker-compose.web-app-deploy.yml build`
 
 `docker compose -f ./docker-compose.web-app-deploy.yml up`
+
+**Workflow testing**
+
+[act](https://github.com/nektos/act)
+
+`act --secret-file act.secrets`
 
 ### Original code base
 
