@@ -1,3 +1,5 @@
 FROM selenium/standalone-chrome:latest
 
+ENV SE_NODE_SESSION_TIMEOUT 3000
+
 EXPOSE 4444
