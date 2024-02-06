@@ -13,9 +13,9 @@ CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localho
 celery = Celery('tasks', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
 celery.conf.beat_schedule = {
-    'webscrape-every-5-mins': {
+    'webscrape-every-35-mins': {
         'task': SCRAPE_TASK,
-        'schedule': crontab(minute='*/5')
+        'schedule': crontab(minute='*/35')
     }
 }
 celery.conf.timezone = 'UTC'
