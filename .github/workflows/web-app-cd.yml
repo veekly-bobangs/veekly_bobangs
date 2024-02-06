@@ -26,8 +26,8 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
-        context: ./frontend/webapp
-        file: ./Dockerfile.prod
+        context: .
+        file: ./frontend/webapp/Dockerfile.prod
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/veekly-bobangs-clockbox:latest
       
