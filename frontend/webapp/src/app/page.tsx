@@ -12,7 +12,8 @@ export default async function HomePage() {
     <Stack gap="lg">
       {response?.status ?
         <Text>Something is wrong with our server, try again later. status: {response.status}</Text>
-        : <Text>Servers are down, please try again later</Text>
+        : response === undefined ? <Text>Servers are down, please try again later</Text>
+        : null
       }
       {response?.deals ? <AllDeals deals={response.deals} /> : null}
       {response?.deals ? <NearbyDeals deals={response.deals} /> : null}
