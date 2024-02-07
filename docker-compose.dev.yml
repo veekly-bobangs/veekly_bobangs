@@ -51,7 +51,7 @@ services:
   selenium-chrome_node_1:
     image: selenium/node-chrome:4.13.0
     depends_on:
-      - hub
+      - selenium-hub
     environment:
       SE_EVENT_BUS_HOST: hub
       SE_EVENT_BUS_PUBLISH_PORT: 4442

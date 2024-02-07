@@ -4,15 +4,13 @@ import pandas as pd
 import numpy as np
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 import time
 from utils.chopeDetails import parseTags
 from utils.addressConverter import getLongLatFromRawAddress, countPostalCodesFromRawAddress
 import os
 
 def get_webscrape_data_with_retry(max_retries=3, backoff=20):
-    options = Options()
+    options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")  # This bypasses OS security model (for docker)
     options.add_argument("--disable-dev-shm-usage")  # overcome limited resource problems (for docker)
@@ -24,12 +22,13 @@ def get_webscrape_data_with_retry(max_retries=3, backoff=20):
         SELENIUM_URL = os.environ.get('SELENIUM_URL', '')
         if SELENIUM_URL:
             time.sleep(5) # ensure selenium grid is ready
-            driver = webdriver.Remote(SELENIUM_URL, options=options)
+            driver = webdriver.Remote(command_executor=SELENIUM_URL, options=options)
         else:
             driver = webdriver.Chrome(options=options) # not running on docker, assume have chrome stuff
         try:
             return get_webscrape_data(driver)
         except Exception as e:
+            print(f"Error while trying to scrape: {e}")
             driver.quit()
             retries += 1
             print(f"Connection error while trying to scrape, retry {retries}/{max_retries}. Error: {e}")
@@ -39,60 +38,32 @@ def get_webscrape_data_with_retry(max_retries=3, backoff=20):
     raise ConnectionError("Failed to complete web scraping after multiple retries.")
 
 def get_webscrape_data(driver):
-    
-    try:
-        driver.get("https://shop.chope.co/collections/best-sellers")
-    except Exception as e:
-        print("Error getting url: ", e)
-        driver.quit()
-        return None
+    driver.get("https://shop.chope.co/collections/best-sellers")
     
     SCROLL_PAUSE_TIME = 0.5
 
-    try:
-        # Get the height of the page
-        last_height = driver.execute_script("return document.body.scrollHeight")
-    except Exception as e:
-        print("Error getting page height: ", e)
-        driver.quit()
-        return None
+    last_height = driver.execute_script("return document.body.scrollHeight")
     
     while True:
-        try:
-            # Scroll to the bottom of the page
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-            time.sleep(SCROLL_PAUSE_TIME)
+        time.sleep(SCROLL_PAUSE_TIME)
 
-            # Calculate new height and check if we have reached the end of the page
-            new_height = driver.execute_script("return document.body.scrollHeight")
-            if new_height == last_height:
-                break
-            
-            last_height = new_height
+        # Calculate new height and check if we have reached the end of the page
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        
+        last_height = new_height
 
-        except Exception as e:
-            print("Error scrolling to bottom of page: ", e)
-            driver.quit()
-            return None
 
     page_source = driver.page_source
-    try:
-        soup = BeautifulSoup(page_source, 'html.parser')
-        print("Successfully parsed page source, quitting selenium driver")
-        driver.quit()
-    except Exception as e:
-        print("Error parsing page source: ", e)
-        driver.quit()
-        return None
 
-    # getting the relevant data
-    try:
-        all_deals = soup.find(id = 'bc-sf-filter-products')
-    except Exception as e:
-        print("Error finding all deals: ", e)
-        driver.quit()
-        return None
+    soup = BeautifulSoup(page_source, 'html.parser')
+    print("Successfully parsed page source, quitting selenium driver")
+    driver.quit()
+
+    all_deals = soup.find(id = 'bc-sf-filter-products')
 
     url = 'https://shop.chope.co'
     promos = []
