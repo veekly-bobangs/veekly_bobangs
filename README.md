@@ -44,6 +44,8 @@ or
 
 `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx-selfsigned.key -out nginx-selfsigned.crt`
 
+Update map api key - copy `.env.example` and change to `.env.local`
+
 Pull from VM:
 
 `docker compose -f ./docker-compose.web-app-deploy.yml down`

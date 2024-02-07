@@ -37,7 +37,7 @@ export default function MapPage() {
         height="250"
         style={{ border: 0 }}
         referrerPolicy="no-referrer-when-downgrade"
-        src={"https://www.google.com/maps/embed/v1/view?key=AIzaSyBt0CINyizadDG0qTS2LDm-ecF_lU3VUj4&center="
+        src={`https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_MAPS_API_KEY}&center=`
           + (currentLocation?.lat.toString() || "") + "," + (currentLocation?.lng.toString() || "") + "&zoom=15"
         }
         allowFullScreen>
