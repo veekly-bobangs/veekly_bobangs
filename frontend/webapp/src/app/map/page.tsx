@@ -28,7 +28,7 @@ export default function MapPage() {
 
     navigator.geolocation.getCurrentPosition(success, handleError);
   }, []);
-  
+
   return (
     <>
       <h1>Map Page</h1>
