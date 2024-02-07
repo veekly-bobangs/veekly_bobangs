@@ -28,7 +28,7 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 **Deployment of front end:**
 
-Locally push to docker hub (until CDevelopment in GH actions fixed)
+Locally push to docker hub (this part is integrated to GH Actions- FYI for manual version)
 
 `docker build -t bokuan/veekly-bobangs-clockbox:latest . -f .\Dockerfile.prod`
 
@@ -43,6 +43,8 @@ Transfer SSL/TLS certificates:
 or
 
 `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx-selfsigned.key -out nginx-selfsigned.crt`
+
+Update map api key - copy `.env.example` and change to `.env.local`
 
 Pull from VM:
 
