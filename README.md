@@ -28,7 +28,7 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 **Deployment of front end:**
 
-Locally push to docker hub (until CDevelopment in GH actions fixed)
+Locally push to docker hub (this part is integrated to GH Actions- FYI for manual version)
 
 `docker build -t bokuan/veekly-bobangs-clockbox:latest . -f .\Dockerfile.prod`
 

@@ -53,13 +53,10 @@ services:
     depends_on:
       - selenium-hub
     environment:
-      SE_EVENT_BUS_HOST: hub
+      SE_EVENT_BUS_HOST: selenium-hub
       SE_EVENT_BUS_PUBLISH_PORT: 4442
       SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
       SE_NODE_STEREOTYPE: "{\"browserName\":\"chrome\",\"browserVersion\":\"117\",\"platformName\": \"Windows 10\"}"
-    ports:
-      - "4444:4444"
-    shm_size: '2g'
   frontend-webapp:
     build:
       context: ./frontend/webapp
