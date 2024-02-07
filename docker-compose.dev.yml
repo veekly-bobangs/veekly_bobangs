@@ -13,7 +13,7 @@ services:
           target: /app
     depends_on:
       - redis
-      - selenium-hub
+      - selenium-chrome
       - celery-worker
   celery-worker:
     build:
@@ -26,7 +26,7 @@ services:
           target: /app
     depends_on:
       - redis
-      - selenium-hub
+      - selenium-chrome
   flower:
     build:
       context: ./backend/deal-service
@@ -40,23 +40,14 @@ services:
     image: "redis:alpine"
     ports:
       - "6379:6379"
-  selenium-hub:
-    image: selenium/hub:4.13.0
+  selenium-chrome:
+    build:
+      context: ./backend/deal-service
+      dockerfile: Dockerfile.selenium
     ports:
-      - 4442:4442
-      - 4443:4443
-      - 4444:4444
-    environment:
-      GRID_MAX_SESSION: 8     
-  selenium-chrome_node_1:
-    image: selenium/node-chrome:4.13.0
-    depends_on:
-      - selenium-hub
-    environment:
-      SE_EVENT_BUS_HOST: selenium-hub
-      SE_EVENT_BUS_PUBLISH_PORT: 4442
-      SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
-      SE_NODE_STEREOTYPE: "{\"browserName\":\"chrome\",\"browserVersion\":\"117\",\"platformName\": \"Windows 10\"}"
+      - "4444:4444"  # WebDriver port
+      - "7900:7900"  # VNC port (optional, for UI access)
+    shm_size: 2g
   frontend-webapp:
     build:
       context: ./frontend/webapp
