@@ -46,8 +46,8 @@ services:
       dockerfile: Dockerfile.selenium
     ports:
       - "4444:4444"  # WebDriver port
-      - "7900:7900"  # VNC port (optional, for UI access)
-    shm_size: 2g
+    shm_size: '2g'
+    restart: always
   frontend-webapp:
     build:
       context: ./frontend/webapp
