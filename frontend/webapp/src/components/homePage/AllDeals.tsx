@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
-import { Deal } from '@/utils/staticDealFetch'
+import { Deal } from '@/types';
 import { DealCard } from '@/components/common';
 import classes from './AllDeals.module.css';
 
