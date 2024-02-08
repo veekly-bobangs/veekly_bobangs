@@ -3,7 +3,7 @@ import {
   Text,
 } from '@mantine/core';
 import { AllDeals, NearbyDeals } from '@/components/homePage'
-import { fetchDealsStatic } from '@/utils/staticDealFetch';
+import { fetchDealsStatic } from '@/utils';
 
 export default async function HomePage() {
   const response = await fetchDealsStatic();
