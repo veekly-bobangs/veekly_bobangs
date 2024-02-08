@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import {
-  IconBellRinging,
   IconHome2,
   IconSettings,
   IconLogout,
