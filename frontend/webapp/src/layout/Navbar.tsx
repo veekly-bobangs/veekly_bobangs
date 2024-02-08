@@ -1,25 +1,26 @@
 'use client'
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import {
   IconBellRinging,
   IconHome2,
   IconSettings,
-  IconSwitchHorizontal,
   IconLogout,
   IconMap2,
 } from '@tabler/icons-react';
 import classes from './Navbar.module.css';
+import { PAGE_PATHS, PAGE_NAMES, getPageNameFromPagePath } from '@/constants';
 
 const data = [
-  { link: '', label: 'Notifications', icon: IconBellRinging },
-  { link: '/', label: 'Home', icon: IconHome2},
-  { link: '/map', label: 'Map', icon: IconMap2 },
-  { link: '', label: 'Settings', icon: IconSettings },
+  { link: PAGE_PATHS.HOME, label: PAGE_NAMES.HOME, icon: IconHome2},
+  { link: PAGE_PATHS.MAP, label: PAGE_NAMES.MAP, icon: IconMap2 },
+  { link: PAGE_PATHS.SETTINGS, label: PAGE_NAMES.SETTINGS, icon: IconSettings },
 ];
 
 export default function Navbar() {
-  const [active, setActive] = useState('Home');
+  const pathname = usePathname()
+  const [active, setActive] = useState(getPageNameFromPagePath(pathname));
 
   const links = data.map((item) => (
     <a
@@ -43,11 +44,6 @@ export default function Navbar() {
       </div>
 
       <div className={classes.footer}>
-        <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Change account</span>
-        </a>
-
         <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
           <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>
