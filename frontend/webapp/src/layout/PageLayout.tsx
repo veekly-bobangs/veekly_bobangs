@@ -7,7 +7,7 @@ import {
   Container,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import Navbar from './Navbar';
+import { Navbar } from '@/layout';
 
 interface PageLayoutProps {
   children: React.ReactNode;
