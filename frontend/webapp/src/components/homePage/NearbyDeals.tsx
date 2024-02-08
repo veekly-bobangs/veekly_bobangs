@@ -6,7 +6,7 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
-import { Deal } from '@/utils/staticDealFetch'
+import { Deal } from '@/types';
 import { DealCard } from '@/components/common';
 
 function getDistanceFromLatLongInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
