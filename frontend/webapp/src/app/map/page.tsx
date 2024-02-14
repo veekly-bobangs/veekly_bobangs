@@ -1,5 +1,6 @@
 'use client'
 import React from 'react';
+import dynamic from 'next/dynamic';
 
 interface CurrentLocation {
   lat: number;
@@ -9,6 +10,12 @@ interface CurrentLocation {
 export default function MapPage() {
   const [currentLocation, setCurrentLocation] = React.useState<CurrentLocation | null>(null);
   const [error, setError] = React.useState<string>('');
+
+  const LeafletMap = dynamic
+    (() => import('@/components/mapPage/leafletMap'), {
+      loading: () => <p>A map is loading</p>,
+      ssr: false
+    });
 
   React.useEffect(() => {
     if (!navigator.geolocation) {
@@ -32,7 +39,7 @@ export default function MapPage() {
   return (
     <>
       <h1>Map Page</h1>
-      <iframe
+      {/* <iframe
         width="450"
         height="250"
         style={{ border: 0 }}
@@ -41,7 +48,8 @@ export default function MapPage() {
           + (currentLocation?.lat.toString() || "") + "," + (currentLocation?.lng.toString() || "") + "&zoom=15"
         }
         allowFullScreen>
-      </iframe>
+      </iframe> */}
+      <LeafletMap position={[currentLocation?.lat || 0, currentLocation?.lng || 0]} zoom={15} />
     </>
   );
 }
