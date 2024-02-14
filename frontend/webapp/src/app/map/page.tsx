@@ -9,6 +9,7 @@ import {
   Button,
   Image,
   Group,
+  Loader,
   Modal,
   Stack,
   Text,
@@ -49,7 +50,13 @@ export default function MapPage() {
   }, []);
 
   const LeafletMap = dynamic(() => import('@/components/mapPage/leafletMap'), {
-    loading: () => <p>A map is loading</p>,
+    loading: () => (
+      <>
+        <Text>Loading map...</Text>
+        <Loader />
+        <Text c="dimmed">We are working to optimize this loading</Text>
+      </>
+    ),
     ssr: false
   });
 
