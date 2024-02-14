@@ -1,6 +1,8 @@
 'use client'
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { DealsFetchReturnType } from '@/utils';
+import { API_ENDPOINTS } from '@/constants';
 
 interface CurrentLocation {
   lat: number;
@@ -10,6 +12,17 @@ interface CurrentLocation {
 export default function MapPage() {
   const [currentLocation, setCurrentLocation] = React.useState<CurrentLocation | null>(null);
   const [error, setError] = React.useState<string>('');
+  const [dealsData, setDealsData] = React.useState<DealsFetchReturnType>({});
+
+  React.useEffect(() => {
+    async function fetchDeals() {
+      const response = await fetch(`/api${API_ENDPOINTS.GET_DEALS}`);
+      const data: DealsFetchReturnType = await response.json();
+      setDealsData(data);
+    }
+
+    fetchDeals();
+  }, []);
 
   const LeafletMap = dynamic
     (() => import('@/components/mapPage/leafletMap'), {
@@ -49,7 +62,7 @@ export default function MapPage() {
         }
         allowFullScreen>
       </iframe> */}
-      <LeafletMap position={[currentLocation?.lat || 0, currentLocation?.lng || 0]} zoom={15} />
+      <LeafletMap curPosition={[currentLocation?.lat || 0, currentLocation?.lng || 0]} zoom={15} />
     </>
   );
 }
