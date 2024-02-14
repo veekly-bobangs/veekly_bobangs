@@ -9,15 +9,15 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import { Deal } from "@/types";
-import { DealCard } from "../common";
 
 interface LeafletMapProps {
   curPosition: [number, number]
   zoom: number
   deals: Deal[]
+  style: React.CSSProperties
 }
 
-export default function leafletMap({curPosition, zoom, deals } : LeafletMapProps) {
+export default function leafletMap({curPosition, zoom, deals, style } : LeafletMapProps) {
   const myLocationIcon = new Icon({
     iconUrl: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png',
     iconSize: [33, 33],
@@ -28,9 +28,11 @@ export default function leafletMap({curPosition, zoom, deals } : LeafletMapProps
 
   return (
     <MapContainer
-      center={curPosition} zoom={zoom}
+      center={curPosition}
+      zoom={zoom}
       scrollWheelZoom={true}
-      style={{height: '400px', width: '100%', zIndex: 10}}
+      // style={{height: '400px', width: '100%', zIndex: 10}}
+      style={style}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -44,7 +46,7 @@ export default function leafletMap({curPosition, zoom, deals } : LeafletMapProps
       {deals?.map((deal) => (
         <Marker key={deal.id} position={[parseFloat(deal.longlat[0][1]), parseFloat(deal.longlat[0][0])]}>
           <Popup maxHeight={300}>
-            <DealCard deal={deal} />
+            {deal.title}
           </Popup>
         </Marker>
       ))}

@@ -39,7 +39,7 @@ export default function AllDeals({ deals }: AllDealsProps) {
     <Stack>
       <Text>All Deals</Text>
       <Carousel
-      classNames={classes}
+        classNames={classes}
         nextControlIcon={
           <div style={iconWrapperStyle}>
             <IconArrowRight style={{ width: rem(16), height: rem(16) }} />
