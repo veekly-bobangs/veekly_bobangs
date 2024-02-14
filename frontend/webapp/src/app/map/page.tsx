@@ -1,14 +1,69 @@
 'use client'
 import React from 'react';
+import dynamic from 'next/dynamic';
+import {
+  Carousel,
+  Embla,
+} from '@mantine/carousel';
+import {
+  Button,
+  Image,
+  Group,
+  Loader,
+  Modal,
+  Stack,
+  Text,
+} from '@mantine/core';
+import {
+  useDisclosure,
+  useViewportSize
+} from '@mantine/hooks';
+import { DealsFetchReturnType } from '@/utils';
+import { API_ENDPOINTS } from '@/constants';
+import { DealCard } from "@/components/common";
+import { Deal } from '@/types';
 
-interface CurrentLocation {
+interface Location {
   lat: number;
   lng: number;
 }
 
 export default function MapPage() {
-  const [currentLocation, setCurrentLocation] = React.useState<CurrentLocation | null>(null);
+  const { width, height } = useViewportSize();
+  const [currentLocation, setCurrentLocation] = React.useState<Location | null>(null);
   const [error, setError] = React.useState<string>('');
+  const [dealsData, setDealsData] = React.useState<DealsFetchReturnType>({});
+  const [selectedDeal, setSelectedDeal] = React.useState<Deal | null>(null);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [embla, setEmbla] = React.useState<Embla | null>(null);
+  const [activeDealIndex, setActiveDealIndex] = React.useState<number>(0);
+  const [mapCenterPos, setMapCenterPos] = React.useState<Location | null>(null);
+
+  React.useEffect(() => {
+    async function fetchDeals() {
+      try  {
+        const response = await fetch(`/api${API_ENDPOINTS.GET_DEALS}`);
+        const data: DealsFetchReturnType = await response.json();
+        setDealsData(data);
+        setError('');
+      } catch (error) {
+        setError('Error fetching deals');
+      }
+    }
+
+    fetchDeals();
+  }, []);
+
+  const LeafletMap = dynamic(() => import('@/components/mapPage/leafletMap'), {
+    loading: () => (
+      <>
+        <Text>Loading map...</Text>
+        <Loader />
+        <Text c="dimmed">We are working to optimize this loading</Text>
+      </>
+    ),
+    ssr: false
+  });
 
   React.useEffect(() => {
     if (!navigator.geolocation) {
@@ -20,6 +75,7 @@ export default function MapPage() {
       const latitude  = position.coords.latitude;
       const longitude = position.coords.longitude;
       setCurrentLocation({ lat: latitude, lng: longitude });
+      setMapCenterPos({ lat: latitude, lng: longitude });
     }
 
     const handleError = (error: GeolocationPositionError) => {
@@ -29,19 +85,85 @@ export default function MapPage() {
     navigator.geolocation.getCurrentPosition(success, handleError);
   }, []);
 
+  React.useEffect(() => {
+    if (embla) {
+      embla.on('select', () => {
+        setActiveDealIndex(embla.selectedScrollSnap());
+      });
+    }
+  }, [embla]);
+
+  React.useEffect(() => {
+    if (dealsData.deals && dealsData.deals[activeDealIndex]) {
+      const deal = dealsData.deals[activeDealIndex];
+      setMapCenterPos({
+        lat: parseFloat(deal.longlat[0][1]),
+        lng: parseFloat(deal.longlat[0][0])
+      });
+    }
+  }, [activeDealIndex]);
+
+  const handleMapMarkerClick = (index: number) => {
+    setActiveDealIndex(index);
+    embla?.scrollTo(index);
+  }
+
   return (
     <>
-      <h1>Map Page</h1>
-      <iframe
-        width="450"
-        height="250"
-        style={{ border: 0 }}
-        referrerPolicy="no-referrer-when-downgrade"
-        src={`https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_MAPS_API_KEY}&center=`
-          + (currentLocation?.lat.toString() || "") + "," + (currentLocation?.lng.toString() || "") + "&zoom=15"
-        }
-        allowFullScreen>
-      </iframe>
+      <Modal opened={opened} onClose={close}>
+        {selectedDeal && <DealCard deal={selectedDeal}/>}
+      </Modal>
+      {error && <Text>{error}</Text>}
+      <Carousel
+        withControls
+        getEmblaApi={setEmbla}
+      >
+        {dealsData.deals?.map((deal) => (
+          <Carousel.Slide key={deal.id} >
+            <Group justify='center' h={height * 0.2}>
+              <Image
+                src={deal.image}
+                w='auto'
+                h={height * 0.15}
+                fit='contain'
+                radius='md'
+              />
+              <Stack w={width * 0.3}>
+                <Text
+                  truncate='end'
+                >
+                  {deal.title}
+                </Text>
+                <Button
+                  onClick={() => {
+                    setSelectedDeal(deal);
+                    open();
+                  }}
+                >
+                  View Deal
+                </Button>
+              </Stack>
+            </Group>
+          </Carousel.Slide>
+        ))}
+      </Carousel>
+      <div style={{ position: 'relative', height: height }}>
+        <LeafletMap
+          curPosition={[currentLocation?.lat || 0, currentLocation?.lng || 0]}
+          centerPos={[mapCenterPos?.lat || 0, mapCenterPos?.lng || 0]}
+          zoom={15}
+          deals={dealsData.deals || []}
+          style={{ 
+            width: '100%', 
+            height: height * 0.85,
+            zIndex: 1, 
+            position: 'absolute', 
+            top: 0, 
+            left: 0 
+          }}
+          handleMapMarkerClick={handleMapMarkerClick}
+        />
+      </div>
     </>
   );
 }

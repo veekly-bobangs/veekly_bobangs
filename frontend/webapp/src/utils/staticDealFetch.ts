@@ -1,13 +1,13 @@
 import { API_ENDPOINTS } from '@/constants';
 import { Deal } from '@/types';
 
-interface DealsFetchProps {
+export interface DealsFetchReturnType {
   deals?: Deal[];
   status?: string;
   error?: string;
 }
 
-export async function fetchDealsStatic(): Promise<DealsFetchProps> {
+export async function fetchDealsStatic(): Promise<DealsFetchReturnType> {
   try {
     const res = await fetch(`${process.env.API_URL}${API_ENDPOINTS.GET_DEALS}`, { next: { revalidate: 120 } }); // fetches every 120 seconds
     const data = await res.json();
@@ -23,4 +23,3 @@ export async function fetchDealsStatic(): Promise<DealsFetchProps> {
     return { error: error.message };
   }
 }
-
