@@ -9,6 +9,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import { Deal } from "@/types";
+import { DealCard } from "../common";
 
 interface LeafletMapProps {
   curPosition: [number, number]
@@ -42,8 +43,8 @@ export default function leafletMap({curPosition, zoom, deals } : LeafletMapProps
       </Marker>
       {deals?.map((deal) => (
         <Marker key={deal.id} position={[parseFloat(deal.longlat[0][1]), parseFloat(deal.longlat[0][0])]}>
-          <Popup>
-            {deal.title}
+          <Popup maxHeight={300}>
+            <DealCard deal={deal} />
           </Popup>
         </Marker>
       ))}

@@ -51,7 +51,6 @@ export default function MapPage() {
 
   return (
     <>
-      <h1>Map Page</h1>
       {/* <iframe
         width="450"
         height="250"
