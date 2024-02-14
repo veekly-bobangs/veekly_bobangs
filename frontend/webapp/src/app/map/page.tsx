@@ -16,7 +16,7 @@ export default function MapPage() {
 
   React.useEffect(() => {
     async function fetchDeals() {
-      const response = await fetch(`/api${API_ENDPOINTS.GET_DEALS}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_NEXT_SERVER_URL}/api${API_ENDPOINTS.GET_DEALS}`);
       const data: DealsFetchReturnType = await response.json();
       setDealsData(data);
     }
@@ -62,7 +62,11 @@ export default function MapPage() {
         }
         allowFullScreen>
       </iframe> */}
-      <LeafletMap curPosition={[currentLocation?.lat || 0, currentLocation?.lng || 0]} zoom={15} />
+      <LeafletMap
+        curPosition={[currentLocation?.lat || 0, currentLocation?.lng || 0]}
+        zoom={15}
+        deals={dealsData.deals || []}
+      />
     </>
   );
 }
