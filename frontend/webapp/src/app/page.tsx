@@ -3,19 +3,10 @@ import {
   Text,
 } from '@mantine/core';
 import { AllDeals, NearbyDeals } from '@/components/homePage'
-import { DealsFetchReturnType } from '@/utils';
-import { API_ENDPOINTS } from '@/constants';
-
-async function getDealsData() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_NEXT_SERVER_URL}/api${API_ENDPOINTS.GET_DEALS}`
-  );
-
-  return res.json();
-}
+import { fetchDealsStatic } from '@/utils';
 
 export default async function HomePage() {
-  const dealsData: DealsFetchReturnType = await getDealsData();
+  const dealsData = await fetchDealsStatic();
   
   return (
     <Stack gap="lg">

@@ -41,9 +41,14 @@ export default function MapPage() {
 
   React.useEffect(() => {
     async function fetchDeals() {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_NEXT_SERVER_URL}/api${API_ENDPOINTS.GET_DEALS}`);
-      const data: DealsFetchReturnType = await response.json();
-      setDealsData(data);
+      try  {
+        const response = await fetch(`/api${API_ENDPOINTS.GET_DEALS}`);
+        const data: DealsFetchReturnType = await response.json();
+        setDealsData(data);
+        setError('');
+      } catch (error) {
+        setError('Error fetching deals');
+      }
     }
 
     fetchDeals();
@@ -108,6 +113,7 @@ export default function MapPage() {
       <Modal opened={opened} onClose={close}>
         {selectedDeal && <DealCard deal={selectedDeal}/>}
       </Modal>
+      {error && <Text>{error}</Text>}
       <Carousel
         withControls
         getEmblaApi={setEmbla}
