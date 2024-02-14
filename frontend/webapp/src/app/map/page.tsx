@@ -3,6 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import {
   Carousel,
+  Embla,
 } from '@mantine/carousel';
 import {
   Button,
@@ -21,18 +22,21 @@ import { API_ENDPOINTS } from '@/constants';
 import { DealCard } from "@/components/common";
 import { Deal } from '@/types';
 
-interface CurrentLocation {
+interface Location {
   lat: number;
   lng: number;
 }
 
 export default function MapPage() {
-  const { height } = useViewportSize();
-  const [currentLocation, setCurrentLocation] = React.useState<CurrentLocation | null>(null);
+  const { width, height } = useViewportSize();
+  const [currentLocation, setCurrentLocation] = React.useState<Location | null>(null);
   const [error, setError] = React.useState<string>('');
   const [dealsData, setDealsData] = React.useState<DealsFetchReturnType>({});
   const [selectedDeal, setSelectedDeal] = React.useState<Deal | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const [embla, setEmbla] = React.useState<Embla | null>(null);
+  const [activeDealIndex, setActiveDealIndex] = React.useState<number>(0);
+  const [mapCenterPos, setMapCenterPos] = React.useState<Location | null>(null);
 
   React.useEffect(() => {
     async function fetchDeals() {
@@ -44,15 +48,10 @@ export default function MapPage() {
     fetchDeals();
   }, []);
 
-  // const LeafletMap = dynamic
-  //   (() => import('@/components/mapPage/leafletMap'), {
-  //     loading: () => <p>A map is loading</p>,
-  //     ssr: false
-  //   });
-  const LeafletMap = React.useMemo(() => dynamic(() => import('@/components/mapPage/leafletMap'), {
+  const LeafletMap = dynamic(() => import('@/components/mapPage/leafletMap'), {
     loading: () => <p>A map is loading</p>,
     ssr: false
-  }), []);
+  });
 
   React.useEffect(() => {
     if (!navigator.geolocation) {
@@ -64,6 +63,7 @@ export default function MapPage() {
       const latitude  = position.coords.latitude;
       const longitude = position.coords.longitude;
       setCurrentLocation({ lat: latitude, lng: longitude });
+      setMapCenterPos({ lat: latitude, lng: longitude });
     }
 
     const handleError = (error: GeolocationPositionError) => {
@@ -73,6 +73,29 @@ export default function MapPage() {
     navigator.geolocation.getCurrentPosition(success, handleError);
   }, []);
 
+  React.useEffect(() => {
+    if (embla) {
+      embla.on('select', () => {
+        setActiveDealIndex(embla.selectedScrollSnap());
+      });
+    }
+  }, [embla]);
+
+  React.useEffect(() => {
+    if (dealsData.deals && dealsData.deals[activeDealIndex]) {
+      const deal = dealsData.deals[activeDealIndex];
+      setMapCenterPos({
+        lat: parseFloat(deal.longlat[0][1]),
+        lng: parseFloat(deal.longlat[0][0])
+      });
+    }
+  }, [activeDealIndex]);
+
+  const handleMapMarkerClick = (index: number) => {
+    setActiveDealIndex(index);
+    embla?.scrollTo(index);
+  }
+
   return (
     <>
       <Modal opened={opened} onClose={close}>
@@ -80,6 +103,7 @@ export default function MapPage() {
       </Modal>
       <Carousel
         withControls
+        getEmblaApi={setEmbla}
       >
         {dealsData.deals?.map((deal) => (
           <Carousel.Slide key={deal.id} >
@@ -91,8 +115,10 @@ export default function MapPage() {
                 fit='contain'
                 radius='md'
               />
-              <Stack>
-                <Text>
+              <Stack w={width * 0.3}>
+                <Text
+                  truncate='end'
+                >
                   {deal.title}
                 </Text>
                 <Button
@@ -111,6 +137,7 @@ export default function MapPage() {
       <div style={{ position: 'relative', height: height }}>
         <LeafletMap
           curPosition={[currentLocation?.lat || 0, currentLocation?.lng || 0]}
+          centerPos={[mapCenterPos?.lat || 0, mapCenterPos?.lng || 0]}
           zoom={15}
           deals={dealsData.deals || []}
           style={{ 
@@ -121,6 +148,7 @@ export default function MapPage() {
             top: 0, 
             left: 0 
           }}
+          handleMapMarkerClick={handleMapMarkerClick}
         />
       </div>
     </>

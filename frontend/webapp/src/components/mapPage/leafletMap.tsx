@@ -1,8 +1,10 @@
+import React from "react";
 import {
   MapContainer,
   Marker,
   TileLayer,
   Popup,
+  useMap
 } from "react-leaflet"
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -12,12 +14,25 @@ import { Deal } from "@/types";
 
 interface LeafletMapProps {
   curPosition: [number, number]
+  centerPos: [number, number]
   zoom: number
   deals: Deal[]
   style: React.CSSProperties
+  handleMapMarkerClick: (index: number) => void
 }
 
-export default function leafletMap({curPosition, zoom, deals, style } : LeafletMapProps) {
+function MapUpdater({ centerPos }: { centerPos: [number, number] }) {
+  const map = useMap();
+
+  React.useEffect(() => {
+    map.flyTo(centerPos);
+  }, [centerPos, map]);
+
+  return null;
+}
+
+export default function leafletMap(
+    {curPosition, centerPos, zoom, deals, style, handleMapMarkerClick } : LeafletMapProps) {
   const myLocationIcon = new Icon({
     iconUrl: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-512.png',
     iconSize: [33, 33],
@@ -28,7 +43,7 @@ export default function leafletMap({curPosition, zoom, deals, style } : LeafletM
 
   return (
     <MapContainer
-      center={curPosition}
+      center={centerPos}
       zoom={zoom}
       scrollWheelZoom={true}
       // style={{height: '400px', width: '100%', zIndex: 10}}
@@ -43,13 +58,23 @@ export default function leafletMap({curPosition, zoom, deals, style } : LeafletM
           You are here
         </Popup>
       </Marker>
-      {deals?.map((deal) => (
-        <Marker key={deal.id} position={[parseFloat(deal.longlat[0][1]), parseFloat(deal.longlat[0][0])]}>
-          <Popup maxHeight={300}>
-            {deal.title}
-          </Popup>
-        </Marker>
-      ))}
+      {deals?.map((deal, index) => {
+        if (!deal.longlat[0]) return null;
+        return (
+          <Marker
+            key={deal.id}
+            position={[parseFloat(deal.longlat[0][1]), parseFloat(deal.longlat[0][0])]}
+            eventHandlers={{
+              click: () => handleMapMarkerClick(index)
+            }}
+          >
+            <Popup maxHeight={300}>
+              {deal.title}
+            </Popup>
+          </Marker>
+        )
+      })}
+      <MapUpdater centerPos={centerPos} />
     </MapContainer>
   );
 }
