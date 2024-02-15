@@ -7,6 +7,7 @@ import {
 } from '@mantine/carousel';
 import {
   Button,
+  Center,
   Image,
   Group,
   Loader,
@@ -18,6 +19,7 @@ import {
   useDisclosure,
   useViewportSize
 } from '@mantine/hooks';
+import { useMapContext } from '@/contexts';
 import { DealsFetchReturnType } from '@/utils';
 import { API_ENDPOINTS } from '@/constants';
 import { DealCard } from "@/components/common";
@@ -29,6 +31,7 @@ interface Location {
 }
 
 export default function MapPage() {
+  const { map } = useMapContext();
   const { width, height } = useViewportSize();
   const [currentLocation, setCurrentLocation] = React.useState<Location | null>(null);
   const [error, setError] = React.useState<string>('');
@@ -54,16 +57,17 @@ export default function MapPage() {
     fetchDeals();
   }, []);
 
-  const LeafletMap = dynamic(() => import('@/components/mapPage/leafletMap'), {
+  const LeafletMap = React.useMemo(() => dynamic(() => import('@/components/mapPage/leafletMap'), {
     loading: () => (
-      <>
+      <Center style={{ height: '100vh' }}>
+      <div>
         <Text>Loading map...</Text>
-        <Loader />
-        <Text c="dimmed">We are working to optimize this loading</Text>
-      </>
+        <Loader type='dots'/>
+      </div>
+    </Center>
     ),
     ssr: false
-  });
+  }), []);
 
   React.useEffect(() => {
     if (!navigator.geolocation) {
@@ -102,6 +106,18 @@ export default function MapPage() {
       });
     }
   }, [activeDealIndex]);
+
+  React.useEffect(() => {
+    if (map && mapCenterPos) {
+      map.flyTo(mapCenterPos);
+    }
+  }, [map, mapCenterPos]);
+
+  React.useEffect(() => {
+    if (map && currentLocation) {
+      map.flyTo(currentLocation);
+    }
+  }, [map, currentLocation]);
 
   const handleMapMarkerClick = (index: number) => {
     setActiveDealIndex(index);

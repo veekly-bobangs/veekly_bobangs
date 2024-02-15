@@ -10,6 +10,7 @@ import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+import { useMapContext } from "@/contexts";
 import { Deal } from "@/types";
 
 interface LeafletMapProps {
@@ -23,10 +24,10 @@ interface LeafletMapProps {
 
 function MapUpdater({ centerPos }: { centerPos: [number, number] }) {
   const map = useMap();
-
+  const { setMap } = useMapContext();
   React.useEffect(() => {
-    map.flyTo(centerPos);
-  }, [centerPos, map]);
+    setMap(map);
+  }, [map, setMap]);
 
   return null;
 }
@@ -46,7 +47,6 @@ export default function leafletMap(
       center={centerPos}
       zoom={zoom}
       scrollWheelZoom={true}
-      // style={{height: '400px', width: '100%', zIndex: 10}}
       style={style}
     >
       <TileLayer

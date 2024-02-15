@@ -2,6 +2,7 @@ import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import { MapProvider } from '@/contexts';
 import { PageLayout } from '@/layout';
 
 export const metadata = {
@@ -21,9 +22,11 @@ export default function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <MantineProvider>
-          <PageLayout>
-            {children}
-          </PageLayout>
+          <MapProvider>
+            <PageLayout>
+              {children}
+            </PageLayout>
+          </MapProvider>
         </MantineProvider>
       </body>
     </html>
