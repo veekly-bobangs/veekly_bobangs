@@ -26,6 +26,10 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 3. `docker compose -f .\docker-compose.dev.yml down` (when exiting)
 
+**Domain name**
+
+> [Afraid.org](https://freedns.afraid.org/subdomain/)
+
 **Deployment of front end:**
 
 **Locally push to docker hub (this part is integrated to GH Actions- FYI for manual version)**
