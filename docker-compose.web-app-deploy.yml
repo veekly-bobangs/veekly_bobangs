@@ -8,7 +8,9 @@ services:
     build: ./frontend/nginx
     restart: always
     volumes:
-      - ./frontend/nginx/default.conf:/tmp/default.conf
+      - ./frontend/nginx/default.conf:/tmp/default.conf/:ro
+      - ./frontend/certbot/www:/var/www/certbot/:ro
+      - ./frontend/certbot/conf/:/etc/nginx/ssl/:ro
     environment: 
       - WEB_APP_ADDR=web-app:3001
     ports:
@@ -22,3 +24,8 @@ services:
       timeout: 10s
       retries: 3
     command: /app/start.sh
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./frontend/certbot/www:/var/www/certbot/:rw
+      - ./frontend/certbot/conf/:/etc/letsencrypt/:rw
