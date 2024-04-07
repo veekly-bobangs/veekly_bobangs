@@ -44,6 +44,8 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 [Guide used](https://mindsers.blog/en/post/https-using-nginx-certbot-docker/)
 
+if nginx has trouble reading pem files, do `sudo chmod -R 755 ./certbot/conf/<folder>/` for folders that have no permission
+
 Renewing cert (every 3 months): `docker compose -f ./docker-compose.web-app-deploy.yml run --rm certbot renew` (Do this while containers are running)
 
 **Pull from VM:**
