@@ -15,8 +15,31 @@ import {
 import {
  PAGE_PATHS,
 } from '@/constants/endpoints';
+import { showErrorNotification } from '@/utils/notificationManager';
+import { redirect } from 'next/navigation';
+import { createClient } from "@/utils/supabase/server";
 
 export default function LoginPage() {
+  const signIn = async (formData: FormData) => {
+    "use server";
+  
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+  
+    if (error) {
+      showErrorNotification("Could not authenticate user");
+      return redirect(PAGE_PATHS.LOGIN);
+    }
+  
+    return redirect(PAGE_PATHS.HOME);
+  }
+  
   return (
     <Container size={420} my={40}>
       <Title ta="center">

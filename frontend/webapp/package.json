@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@mantine/carousel": "^7.5.1",
-    "@mantine/core": "^7.4.1",
-    "@mantine/hooks": "^7.4.1",
+    "@mantine/core": "^7.9.2",
+    "@mantine/hooks": "^7.9.2",
+    "@mantine/notifications": "^7.9.2",
+    "@supabase/ssr": "^0.3.0",
+    "@supabase/supabase-js": "^2.43.2",
     "@tabler/icons-react": "^2.46.0",
     "embla-carousel-autoplay": "^7.1.0",
     "embla-carousel-react": "^7.1.0",
