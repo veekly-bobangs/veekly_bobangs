@@ -2,6 +2,8 @@ export const PAGE_PATHS = {
     HOME: '/',
     MAP: '/map',
     SETTINGS: '/settings',
+    LOGIN: '/login',
+    REGISTER: '/register',
 };
 
 export const PAGE_NAMES = {
