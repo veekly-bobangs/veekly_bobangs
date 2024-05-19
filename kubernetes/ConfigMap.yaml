@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configs
+data:
+  API_URL: http://flask-app-service:8000
+  SELENIUM_URL: http://selenium-service:4444/wd/hub
+  CELERY_BROKER_URL: redis://redis:6379/0
+  CELERY_RESULT_BACKEND: redis://redis:6379/0

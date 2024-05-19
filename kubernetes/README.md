@@ -9,6 +9,7 @@
 2. Start pods
 
 ```
+kubectl apply -f ConfigMap.yaml
 kubectl apply -f ./backend/redis.yaml
 kubectl apply -f ./backend/selenium.yaml
 kubectl apply -f ./backend/celery.yaml

@@ -19,11 +19,20 @@ spec:
           image: bokuan/veekly-bobangs-celery:latest
           env:
             - name: CELERY_BROKER_URL
-              value: redis://redis:6379/0
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: CELERY_BROKER_URL
             - name: CELERY_RESULT_BACKEND
-              value: redis://redis:6379/0
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: CELERY_RESULT_BACKEND
             - name: SELENIUM_URL
-              value: http://selenium-service:4444/wd/hub
+              valueFrom:
+                configMapKeyRef:
+                  name: configs
+                  key: SELENIUM_URL
 ---
 apiVersion: v1
 kind: Service
