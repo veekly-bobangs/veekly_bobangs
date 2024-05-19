@@ -6,9 +6,17 @@
 
 1. `minikube start`
 
-2. `kubectl apply -f <file>`
+2. Start pods
 
-3. `kubectl service webapp-service --url`
+```
+kubectl apply -f ./backend/redis.yaml
+kubectl apply -f ./backend/selenium.yaml
+kubectl apply -f ./backend/celery.yaml
+kubectl apply -f ./backend/flask-app.yaml
+kubectl apply -f ./webapp/webapp.yaml
+```
+
+3. `minikube service webapp-service --url`
 
 ### Stop
 
