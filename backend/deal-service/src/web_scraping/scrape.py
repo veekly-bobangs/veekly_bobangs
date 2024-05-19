@@ -70,8 +70,7 @@ def get_webscrape_data(driver):
 
     for deal in all_deals:
         # Add buffer time if scraping on AWS
-        isDev = os.environ.get('IS_DEVELOPMENT', False)
-        if not isDev:
+        if os.environ.get('IS_PROD', False):
             time.sleep(1)
 
         try:
