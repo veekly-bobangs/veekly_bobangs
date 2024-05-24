@@ -1,5 +1,6 @@
 import { Box, Progress, PasswordInput, Group, Text, Center } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons-react';
+import { useEffect } from 'react';
 
 function PasswordRequirement({ meets, label }: { meets: boolean; label: string }) {
   return (
@@ -30,18 +31,11 @@ const requirements = [
   { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Includes special symbol' },
 ];
 
-function getStrength(
-  password: string,
-  setIsStrongEnough: React.Dispatch<React.SetStateAction<boolean>>
-) {
-  let multiplier = password.length > 5 ? 0 : 1;
-  
-  if (multiplier === 0) {
-    setIsStrongEnough(true);
-  } else {
-    setIsStrongEnough(false);
+function getStrength(password: string) {
+  if (password.length < 6) {
+    return 0;
   }
-
+  let multiplier = 0;
   requirements.forEach((requirement) => {
     if (!requirement.re.test(password)) {
       multiplier += 1;
@@ -63,7 +57,12 @@ export default function PasswordStrength({
   setIsStrongEnough,
 }: PasswordStrengthProps
 ) {
-  const strength = getStrength(value, setIsStrongEnough);
+  const strength = getStrength(value);
+
+  useEffect(() => {
+    setIsStrongEnough(strength !== 0);
+  }, [strength, setIsStrongEnough]);
+
   const softChecks = requirements.map((requirement, index) => (
     <SoftPasswordRequirement key={index} label={requirement.label} meets={requirement.re.test(value)} />
   ));

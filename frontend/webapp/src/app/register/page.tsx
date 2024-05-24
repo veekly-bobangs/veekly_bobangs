@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import {
   TextInput,
@@ -12,21 +14,19 @@ import {
 import {
   PasswordStrength,
 } from '@/components/register';
-import { PAGE_PATHS } from '@/constants/endpoints';
-import { headers } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+import { API_ENDPOINTS, PAGE_PATHS } from '@/constants/endpoints';
+import { useRouter } from 'next/navigation';
 import { showErrorNotification, showNotification } from '@/utils';
+import { fetchPost } from '@/utils/browserHttpRequests';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [isStrongEnough, setIsStrongEnough] = React.useState(false);
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
   const signUp = async () => {
-    "use server";
-
     if (password !== confirmPassword) {
       showErrorNotification("Passwords do not match");
       return;
@@ -37,24 +37,21 @@ export default function RegisterPage() {
       return;
     }
 
-    const origin = headers().get("origin");
-    const supabase = createClient();
+    const res = await fetchPost(
+      `/api/${API_ENDPOINTS.REGISTER}`,
+      {
+        email: email,
+        password: password
+      }
+    );
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      showErrorNotification("Could not authenticate user");
-      return redirect(PAGE_PATHS.LOGIN);
+    if (res.error) {
+      showErrorNotification("Could not authenticate user: " + res.error);
+      return;
     }
 
     showNotification("Success", "Check email to continue sign in process");
-    return redirect(PAGE_PATHS.LOGIN);
+    return router.push(PAGE_PATHS.LOGIN);
   };
 
   return (
