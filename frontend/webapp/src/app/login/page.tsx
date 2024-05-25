@@ -15,30 +15,34 @@ import {
 import {
  PAGE_PATHS,
 } from '@/constants/endpoints';
-import { showErrorNotification } from '@/utils/notificationManager';
-import { redirect } from 'next/navigation';
-import { createClient } from "@/utils/supabase/server";
+import { showErrorNotification, showNotification } from '@/utils/notificationManager';
+import { fetchPost } from '@/utils/browserHttpRequests';
+import { API_ENDPOINTS } from '@/constants/endpoints';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const signIn = async (formData: FormData) => {
-  
-    // const email = formData.get('email') as string;
-    // const password = formData.get('password') as string;
+  const router = useRouter();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  const login = async () => {
+    const res = await fetchPost(
+      `/api/${API_ENDPOINTS.LOGIN}`,
+      {
+        email: email,
+        password: password
+      }
+    );
     
-    // const supabase = createClient();
-    // const { error } = await supabase.auth.signInWithPassword({
-    //   email,
-    //   password,
-    // });
-  
-    // if (error) {
-    //   showErrorNotification("Could not authenticate user");
-    //   return redirect(PAGE_PATHS.LOGIN);
-    // }
-  
-    // return redirect(PAGE_PATHS.HOME);
+    if (res.error) {
+      showErrorNotification("Could not authenticate user: " + res.error);
+      return;
+    }
+
+    showNotification("Success", "Logged in successfully");
+    return router.push(PAGE_PATHS.HOME)
   }
-  
+
   return (
     <Container size={420} my={40}>
       <Title ta="center">
@@ -52,15 +56,32 @@ export default function LoginPage() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Email" placeholder="email@veekly.com" required />
-        <PasswordInput label="Password" placeholder="Your password" required mt="md" />
+        <TextInput
+          label="Email"
+          placeholder="email@veekly.com"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.currentTarget.value)}
+        />
+        <PasswordInput
+          label="Password"
+          placeholder="Your password"
+          required
+          mt="md"
+          value={password}
+          onChange={(event) => setPassword(event.currentTarget.value)}
+        />
         <Group justify="space-between" mt="lg">
           <Checkbox label="Remember me" />
           <Anchor component="button" size="sm">
             Forgot password?
           </Anchor>
         </Group>
-        <Button fullWidth mt="xl">
+        <Button
+          fullWidth
+          mt="xl"
+          onClick={login}
+        >
           Sign in
         </Button>
       </Paper>

@@ -1,7 +1,5 @@
-import { API_ENDPOINTS } from "@/constants";
-import { createClient } from "@/utils/supabase/server";
-import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
   if (!request.body) {
@@ -20,26 +18,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // logic
-    const supabase = createClient();
-    const origin = headers().get("origin");
-    const { error } = await supabase.auth.signUp({
+    const supabase = createClient()
+
+    // type-casting here for convenience
+    // in practice, you should validate your inputs
+
+    const { error } = await supabase.auth.signInWithPassword({
       email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}${API_ENDPOINTS.AUTH_CALLBACK}`
-      }
+      password
     });
 
     if (error) {
       return NextResponse.json(
-        { error: "Unable to sign up: " + error.message },
+        { error: "Unable to login: " + error.message },
         { status: typeof error.code === 'number' ? error.code : 500 }
       );
     }
 
     return NextResponse.json(
-      { message: "User registered successfully" },
+      { message: "User logged in successfully" },
       { status: 201 }
     );
   } catch (error: any) {

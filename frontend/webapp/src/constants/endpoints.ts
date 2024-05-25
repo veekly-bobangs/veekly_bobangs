@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
     GET_DEALS: '/get',
     REGISTER: '/register',
     AUTH_CALLBACK: '/auth/callback',
+    LOGIN: '/login',
 };
 
 export function getPageNameFromPagePath(path: string): string {

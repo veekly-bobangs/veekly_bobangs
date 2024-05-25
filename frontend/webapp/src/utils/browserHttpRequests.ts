@@ -1,13 +1,11 @@
 export async function fetchGet(url: string) {
   try {
       const res = await fetch(url);
-
+      const data = await res.json();
       // Check if the HTTP response is successful
       if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+        throw new Error(`${res.status}: ${data.error || "Unknown error"}`);
       }
-
-      const data = await res.json();
       return data;
   } catch (error: any) {
       return { error: error.message || "Unknown error" };
@@ -24,12 +22,11 @@ export async function fetchPost(url: string, body: any) {
           body: JSON.stringify(body),
       });
 
+      const data = await res.json();
       // Check if the HTTP response is successful
       if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+        throw new Error(`${res.status}: ${data.error || "Unknown error"}`);
       }
-
-      const data = await res.json();
       return data;
   } catch (error: any) {
       return { error: error.message || "Unknown error" };

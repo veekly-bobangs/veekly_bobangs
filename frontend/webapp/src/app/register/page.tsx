@@ -44,7 +44,7 @@ export default function RegisterPage() {
         password: password
       }
     );
-
+    
     if (res.error) {
       showErrorNotification("Could not authenticate user: " + res.error);
       return;
