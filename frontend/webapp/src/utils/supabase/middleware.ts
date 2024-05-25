@@ -1,3 +1,4 @@
+import { PAGE_PATHS } from "@/constants";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -63,6 +64,17 @@ export const updateSession = async (request: NextRequest) => {
     // This will refresh session if expired - required for Server Components
     // https://supabase.com/docs/guides/auth/server-side/nextjs
     await supabase.auth.getUser();
+
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // if user is not signed in redirect the user to /login
+    if (!user && request.nextUrl.pathname !== PAGE_PATHS.LOGIN && request.nextUrl.pathname !== PAGE_PATHS.REGISTER) {
+      return NextResponse.redirect(new URL(PAGE_PATHS.LOGIN, request.url))
+    }
+    // if user is logged in and trying to access /login redirect the user to /
+    if (user && request.nextUrl.pathname === PAGE_PATHS.LOGIN || request.nextUrl.pathname === PAGE_PATHS.REGISTER) {
+      return NextResponse.redirect(new URL(PAGE_PATHS.HOME, request.url))
+    }
 
     return response;
   } catch (e) {

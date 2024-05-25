@@ -1,4 +1,9 @@
-export async function fetchGet(url: string) {
+interface BrowserHttpResponse {
+  error?: string | undefined;
+  data?: any | undefined;
+}
+
+export async function fetchGet(url: string): Promise<BrowserHttpResponse> {
   try {
       const res = await fetch(url);
       const data = await res.json();
@@ -6,13 +11,13 @@ export async function fetchGet(url: string) {
       if (!res.ok) {
         throw new Error(`${res.status}: ${data.error || "Unknown error"}`);
       }
-      return data;
+      return { data };
   } catch (error: any) {
       return { error: error.message || "Unknown error" };
   }
 }
 
-export async function fetchPost(url: string, body: any) {
+export async function fetchPost(url: string, body: any): Promise<BrowserHttpResponse> {
   try {
       const res = await fetch(url, {
           method: "POST",
@@ -27,7 +32,7 @@ export async function fetchPost(url: string, body: any) {
       if (!res.ok) {
         throw new Error(`${res.status}: ${data.error || "Unknown error"}`);
       }
-      return data;
+      return { data };
   } catch (error: any) {
       return { error: error.message || "Unknown error" };
   }

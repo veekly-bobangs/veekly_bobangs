@@ -15,33 +15,12 @@ import {
 import {
  PAGE_PATHS,
 } from '@/constants/endpoints';
-import { showErrorNotification, showNotification } from '@/utils/notificationManager';
-import { fetchPost } from '@/utils/browserHttpRequests';
-import { API_ENDPOINTS } from '@/constants/endpoints';
-import { useRouter } from 'next/navigation';
+import { useAuthContext } from '@/contexts';
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { login } = useAuthContext();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-
-  const login = async () => {
-    const res = await fetchPost(
-      `/api/${API_ENDPOINTS.LOGIN}`,
-      {
-        email: email,
-        password: password
-      }
-    );
-    
-    if (res.error) {
-      showErrorNotification("Could not authenticate user: " + res.error);
-      return;
-    }
-
-    showNotification("Success", "Logged in successfully");
-    return router.push(PAGE_PATHS.HOME)
-  }
 
   return (
     <Container size={420} my={40}>
@@ -80,7 +59,7 @@ export default function LoginPage() {
         <Button
           fullWidth
           mt="xl"
-          onClick={login}
+          onClick={() => login(email, password)}
         >
           Sign in
         </Button>

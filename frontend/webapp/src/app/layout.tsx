@@ -2,7 +2,7 @@ import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
-import { MapProvider } from '@/contexts';
+import { AuthProvider, MapProvider } from '@/contexts';
 import { PageLayout } from '@/layout';
 import '@mantine/notifications/styles.css';
 import { Notifications } from '@mantine/notifications';
@@ -24,12 +24,14 @@ export default function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <MantineProvider>
-          <Notifications />
-          <MapProvider>
-            <PageLayout>
-              {children}
-            </PageLayout>
-          </MapProvider>
+          <AuthProvider>
+            <Notifications />
+            <MapProvider>
+              <PageLayout>
+                {children}
+              </PageLayout>
+            </MapProvider>
+          </AuthProvider>
         </MantineProvider>
       </body>
     </html>
