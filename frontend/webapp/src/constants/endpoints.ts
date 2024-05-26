@@ -4,6 +4,7 @@ export const PAGE_PATHS = {
     SETTINGS: '/settings',
     LOGIN: '/login',
     REGISTER: '/register',
+    FORGOT_PASSWORD: '/forgot-password',
 };
 
 export const PAGE_NAMES = {
@@ -17,6 +18,7 @@ export const API_ENDPOINTS = {
     REGISTER: '/register',
     AUTH_CALLBACK: '/auth/callback',
     LOGIN: '/login',
+    FORGOT_PASSWORD: '/forgot-password',
 };
 
 export function getPageNameFromPagePath(path: string): string {

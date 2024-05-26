@@ -52,7 +52,7 @@ export default function LoginPage() {
         />
         <Group justify="space-between" mt="lg">
           <Checkbox label="Remember me" />
-          <Anchor component="button" size="sm">
+          <Anchor href={PAGE_PATHS.FORGOT_PASSWORD}>
             Forgot password?
           </Anchor>
         </Group>
