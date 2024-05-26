@@ -45,7 +45,7 @@ export default function MapPage() {
   React.useEffect(() => {
     async function fetchDeals() {
       try  {
-        const response = await fetch(`/api${API_ENDPOINTS.GET_DEALS}`);
+        const response = await fetch(`${API_ENDPOINTS.GET_DEALS}`);
         const data: DealsFetchReturnType = await response.json();
         setDealsData(data);
         setError('');

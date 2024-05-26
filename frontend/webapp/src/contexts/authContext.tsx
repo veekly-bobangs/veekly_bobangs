@@ -26,7 +26,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (email: string, password: string) => {
     const res = await fetchPost(
-      `/api/${API_ENDPOINTS.LOGIN}`,
+      `${API_ENDPOINTS.LOGIN}`,
       {
         email: email,
         password: password

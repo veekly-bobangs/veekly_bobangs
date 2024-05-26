@@ -38,7 +38,7 @@ export default function RegisterPage() {
     }
 
     const res = await fetchPost(
-      `/api/${API_ENDPOINTS.REGISTER}`,
+      `${API_ENDPOINTS.REGISTER}`,
       {
         email: email,
         password: password

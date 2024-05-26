@@ -14,6 +14,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    `/((?!_next/static|_next/image|favicon.ico|api/login|api/register.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)`,
+    // Dont auth public API endpoints like login, register, forgot password
+    `/((?!_next/static|_next/image|favicon.ico|api/login|api/register|api/forgot-password).*)`,
   ],
 }

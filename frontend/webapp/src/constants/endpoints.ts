@@ -14,11 +14,11 @@ export const PAGE_NAMES = {
 };
 
 export const API_ENDPOINTS = {
-    GET_DEALS: '/get',
-    REGISTER: '/register',
-    AUTH_CALLBACK: '/auth/callback',
-    LOGIN: '/login',
-    FORGOT_PASSWORD: '/forgot-password',
+    GET_DEALS: '/api/get',
+    REGISTER: '/api/register',
+    AUTH_CALLBACK: '/api/auth/callback',
+    LOGIN: '/api/login',
+    FORGOT_PASSWORD: '/api/forgot-password',
 };
 
 export function getPageNameFromPagePath(path: string): string {

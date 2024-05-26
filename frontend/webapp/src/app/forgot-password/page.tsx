@@ -1,3 +1,6 @@
+"use client";
+
+import React from 'react';
 import {
   Paper,
   Title,
@@ -13,9 +16,26 @@ import {
 } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
 import classes from './ForgotPassword.module.css';
-import { PAGE_PATHS } from '@/constants';
+import { API_ENDPOINTS, PAGE_PATHS } from '@/constants';
+import { fetchPost } from '@/utils/browserHttpRequests';
+import { showErrorNotification, showNotification } from '@/utils';
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = React.useState("");
+  
+  const sendForgetPasswordRequest = async () => {
+    const res = await fetchPost(
+      `${API_ENDPOINTS.FORGOT_PASSWORD}`,
+      {
+        email: email,
+      }
+    );
+    if (res.error) {
+      showErrorNotification("Could not send reset password email: " + res.error);
+      return;
+    }
+    showNotification("Reset link sent", "Check email to continue reset password process");
+  }
   return (
     <Container size={460} my={30}>
       <Title className={classes.title} ta="center">
@@ -26,7 +46,13 @@ export default function ForgotPasswordPage() {
       </Text>
 
       <Paper withBorder shadow="md" p={30} radius="md" mt="xl">
-        <TextInput label="Your email" placeholder="email@veekly.com" required />
+        <TextInput
+          label="Your email"
+          placeholder="email@veekly.com"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.currentTarget.value)}
+        />
         <Group justify="space-between" mt="lg" className={classes.controls}>
           <Anchor c="dimmed" size="sm" className={classes.control} href={PAGE_PATHS.LOGIN}>
             <Center inline>
@@ -34,7 +60,12 @@ export default function ForgotPasswordPage() {
               <Box ml={5}>Back to the login page</Box>
             </Center>
           </Anchor>
-          <Button className={classes.control}>Reset password</Button>
+          <Button
+            className={classes.control}
+            onClick={sendForgetPasswordRequest}
+          >
+            Reset password
+          </Button>
         </Group>
       </Paper>
     </Container>
