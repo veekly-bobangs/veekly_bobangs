@@ -20,7 +20,7 @@ import {
   useViewportSize
 } from '@mantine/hooks';
 import { useMapContext } from '@/contexts';
-import { DealsFetchReturnType } from '@/utils';
+import { DealsFetchReturnType, fetchDealsStatic } from '@/utils';
 import { API_ENDPOINTS } from '@/constants';
 import { DealCard } from "@/components/common";
 import { Deal } from '@/types';

@@ -9,7 +9,7 @@ export interface DealsFetchReturnType {
 
 export async function fetchDealsStatic(): Promise<DealsFetchReturnType> {
   try {
-    const res = await fetch(`${process.env.API_URL}${API_ENDPOINTS.GET_DEALS}`, { next: { revalidate: 120 } }); // fetches every 120 seconds
+    const res = await fetch(`${process.env.API_URL}${API_ENDPOINTS.GET_DEALS_STATIC}`, { next: { revalidate: 120 } }); // fetches every 120 seconds
     const data = await res.json();
 
     // Check if the response is 'pending'

@@ -1,27 +1,23 @@
 import json
 import os
+from dotenv import load_dotenv
+from pathlib import Path
 from flask import Flask, jsonify
 from celeryUtils.makeCelery import celery
 from redis.lock import Lock
 from redisConfig import redisClient, SCRAPE_RES, SCRAPE_RES_TIME
-from web_scraping.scrape import get_webscrape_data_with_retry
 
 app = Flask(__name__)
 # For dockerfiles to access celery
 celery
 
-devData = {}
-
 @app.route('/get', methods = ['GET'])
 def get_articles():
-    if os.environ.get('IS_PROD', False):
-        scrape_res = redisClient.get(SCRAPE_RES)
-        if scrape_res is None:
-            return jsonify({"status": "pending"})
-        
-        return jsonify(json.loads(scrape_res))
-    else:
-        return devData
+    scrape_res = redisClient.get(SCRAPE_RES)
+    if scrape_res is None:
+        return jsonify({"status": "pending"})
+    
+    return jsonify(json.loads(scrape_res))
     
 @app.route('/get-time', methods = ['GET'])
 def get_time():
@@ -40,12 +36,15 @@ def flask_health_check():
 	return "success", 200
 
 if __name__ == "__main__":
-    isProd = os.environ.get('IS_PROD', False)
-    if isProd:
+    # This would be already defined in prod dockerfile env var
+    is_prod = os.environ.get('IS_PROD', False)
+    if is_prod:
         print("Running in production mode")
     else:
         print("*** Running in development mode, you should not be seeing this in production!")
-        devData = get_webscrape_data_with_retry()
+        # If not running flask in docker, env var is in env file, not dockerfile
+        dotenv_path = Path('../.env')
+        load_dotenv(dotenv_path=dotenv_path)
 
     print("Starting Flask app")
     app.run(host="0.0.0.0", port=8000)

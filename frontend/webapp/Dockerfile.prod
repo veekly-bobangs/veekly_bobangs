@@ -21,7 +21,7 @@ RUN npm run build
 FROM node:18-alpine AS runner
 WORKDIR /app
 
-ENV API_URL=http://localhost:8000
+ENV API_URL=http://127.0.0.1:8000
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED 1
 

@@ -18,11 +18,25 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 ## Quick start
 
+\* You need to have Docker Installed *
+
 **Development:**
 
 1. `docker compose -f .\docker-compose.dev.yml build`
 
-2. `docker compose -f .\docker-compose.dev.yml watch` (hot reload enabled)
+2. `docker compose -f .\docker-compose.dev.yml up`
+
+3. Start frontend and backend (Install necessary packages first, see READMEs)
+
+    a. `cd ./backend/deal-service`
+
+    b. `python ./src/app.py`
+
+    c. `cd ./frontend/webapp`
+
+    d. `npm run dev`
+
+        - alternatively you can run the frontend in debug mode using vscode debugger
 
 3. `docker compose -f .\docker-compose.dev.yml down` (when exiting)
 

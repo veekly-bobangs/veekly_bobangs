@@ -1,20 +1,5 @@
 version: '3.8'
 services:
-  backend-deal-service:
-    build:
-      context: ./backend/deal-service
-      dockerfile: Dockerfile.dev
-    ports:
-      - "8000:8000"
-    develop:
-      watch:
-        - action: sync
-          path: ./backend/deal-service
-          target: /app
-    depends_on:
-      - redis
-      - selenium-chrome
-      - celery-worker
   celery-worker:
     build:
       context: ./backend/deal-service
@@ -48,20 +33,3 @@ services:
       - "4444:4444"  # WebDriver port
     shm_size: '2g'
     restart: always
-  frontend-webapp:
-    build:
-      context: ./frontend/webapp
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3001:3001"
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend/webapp
-          target: /app
-          ignore: 
-            - node_modules
-        - action: rebuild
-          path: ./frontend/webapp/package.json
-    depends_on:
-      - backend-deal-service

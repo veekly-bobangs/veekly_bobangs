@@ -1,6 +1,9 @@
 from redis import Redis
+import os
 
-redisClient = Redis(host='redis', port=6379, db=0)
+redis_host = os.environ.get('REDIS_URL', 'localhost')
+
+redisClient = Redis(host=redis_host, port=6379, db=0)
 
 SCRAPE_TASK = "scrape_task"
 SCRAPE_RES = "scraping_result"
