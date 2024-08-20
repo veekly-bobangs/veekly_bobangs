@@ -26,7 +26,7 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 2. `docker compose -f .\docker-compose.dev.yml up`
 
-3. Start frontend and backend (Install necessary packages first, see READMEs)
+3. Start frontend and backend (Install necessary packages first and set up db with `alembic upgrade head`, see READMEs)
 
     a. `cd ./backend/deal-service`
 

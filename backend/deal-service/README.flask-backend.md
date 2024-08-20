@@ -10,4 +10,6 @@
 
 3. `pip install -r requirements.txt`
 
-4. `python src/app.py`
+4. `alembic upgrade head` 
+
+5. `python src/app.py`

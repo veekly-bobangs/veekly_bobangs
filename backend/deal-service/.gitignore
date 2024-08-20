@@ -35,5 +35,3 @@ Thumbs.db
 
 # If using SQLite, uncomment the next line
 #*.db
-
-*.env

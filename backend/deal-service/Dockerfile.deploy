@@ -5,6 +5,8 @@ ENV CELERY_RESULT_BACKEND redis://redis:6379/0
 ENV SELENIUM_URL http://selenium-chrome:4444/wd/hub
 ENV IS_PROD true
 ENV REDIS_URL redis
+# TODO set to supabase
+ENV DATABASE_URL postgresql://postgres:postgres@postgres:5432/postgres
 
 WORKDIR /app
 COPY ./requirements.txt /app
