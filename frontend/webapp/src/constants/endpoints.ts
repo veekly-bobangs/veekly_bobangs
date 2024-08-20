@@ -14,8 +14,8 @@ export const PAGE_NAMES = {
 };
 
 export const API_ENDPOINTS = {
-    GET_DEALS_STATIC: '/get',
-    GET_DEALS: 'api/get',
+    GET_DEALS_STATIC: '/api/chope-deals/get',
+    GET_DEALS: '/api/get',
     REGISTER: '/api/register',
     AUTH_CALLBACK: '/api/auth/callback',
     LOGIN: '/api/login',
