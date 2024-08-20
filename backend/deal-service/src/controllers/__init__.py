@@ -1,5 +1,6 @@
 from flask import jsonify, Blueprint
 from .chope_deals import *
+from .restaurants import *
 
 base_routes = Blueprint('base_routes', __name__, template_folder='controllers')
 

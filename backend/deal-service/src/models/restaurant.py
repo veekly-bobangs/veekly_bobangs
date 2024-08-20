@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from src.models import Base, AuditEntity
+from . import Base, AuditEntity
 
 class Restaurant_Model(Base, AuditEntity):
     __tablename__ = 'restaurant'
