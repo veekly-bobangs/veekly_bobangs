@@ -1,11 +1,8 @@
-import json
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-from flask import Flask, jsonify
+from flask import Flask
 from celeryUtils.makeCelery import celery
-from redis.lock import Lock
-from redisConfig import redisClient, SCRAPE_RES, SCRAPE_RES_TIME
 from controllers import base_routes, chope_deals_routes
 
 app = Flask(__name__)

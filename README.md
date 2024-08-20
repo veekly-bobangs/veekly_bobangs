@@ -18,7 +18,7 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 ## Quick start
 
-\* You need to have Docker Installed *
+\* You need to have Docker Installed. Python dev version: 3.10, Node dev version: 18 *
 
 **Development:**
 

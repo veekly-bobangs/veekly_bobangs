@@ -33,3 +33,16 @@ services:
       - "4444:4444"  # WebDriver port
     shm_size: '2g'
     restart: always
+  postgres:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=veekly_bobangs
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_veekly_bobangs:/var/lib/postgresql/data
+volumes:
+  postgres_veekly_bobangs:
