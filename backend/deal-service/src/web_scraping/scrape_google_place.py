@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from utils.addressConverter import getLongLatFromAddressString
 
 def scrape_google_place_info(restaurant_name: str):
     if not restaurant_name:
@@ -50,7 +51,7 @@ def scroll_to_bottom_get_place_results(driver: webdriver, restaurant_name: str):
         scrollable_element.send_keys(Keys.END)
         
         # Wait for content to load
-        time.sleep(1)
+        time.sleep(2)
         
         # Check if the bottom of the element is reached
         last_height = driver.execute_script("return arguments[0].scrollTop", scrollable_element)
@@ -94,6 +95,9 @@ def scroll_to_bottom_get_place_results(driver: webdriver, restaurant_name: str):
                     address = spans[-1].find_all('span', recursive=False)[-1].text
                     if not name or not address:
                         continue
-                    res.append({"name": name, "address": address})
+                    long, lat, building_name = getLongLatFromAddressString(address)
+                    res.append({"name": name, "address": address, "long": long, "lat": lat, "building_name": building_name})
     return res
-                
+
+if __name__ == "__main__":
+    scrape_google_place_info("McDonalds")
