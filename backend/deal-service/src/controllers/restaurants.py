@@ -1,8 +1,7 @@
 from flask import jsonify, Blueprint, request
 from repositories import Restaurant_Repository
-from web_scraping.scrape_google_place import scrape_google_place_info
-from redisConfig import redisRestaurantScrapeClient
-import json
+from celeryUtils.tasks import search_restaurants_online
+from celery.result import AsyncResult
 
 restaurants_routes = Blueprint('restaurants_routes', __name__, template_folder='controllers')
 
@@ -24,9 +23,7 @@ def add_restaurant():
     return jsonify({"restaurant_id": Restaurant_Repository.add_restaurant(restaurant_name)})
 
 """
-Search for a restaurant online using google places. The given restaurant_name is required.
-Caches the result in redis, when frontend requests to add the restaurant with same
-restaurant_name, it will be checked in redis cache.
+Starts a celery task to scrape restaurant locations for a restaurant name.
 """
 @restaurants_routes.route("/search-restaurant-online", methods=["POST"])
 def search_restaurant_from_google():
@@ -38,11 +35,27 @@ def search_restaurant_from_google():
     if Restaurant_Repository.check_if_restaurant_exists(restaurant_name):
         return jsonify({"error": "Restaurant already exists in database"}), 400
 
-    scraped_data = scrape_google_place_info(restaurant_name + " Singapore")
-    if scraped_data is None:
-        return jsonify({"error": "Failed to scrape restaurant data"}), 500
-    
-    redisRestaurantScrapeClient.set(restaurant_name, json.dumps(scraped_data))
+    # Start celery task to search for restaurant
+    result = search_restaurants_online.delay(restaurant_name)
+    return jsonify({"task_id": result.id})
 
-    # Scrape google place
-    return jsonify(scraped_data)
+@restaurants_routes.route("/search-restaurant-online/<task_id>", methods=["GET"])
+def check_search_restaurant_from_google(task_id):
+    if task_id is None:
+        return jsonify({"error": "task_id is required"}), 400
+    
+    result = AsyncResult(task_id)
+    if result.ready():#-Line 5
+        # Task has completed
+        if result.successful():#-Line 6
+            return {
+                "ready": result.ready(),
+                "successful": result.successful(),
+                "value": result.result,#-Line 7
+            }
+        else:
+        # Task completed with an error
+            return jsonify({'status': 'ERROR', 'error_message': str(result.result)})
+    else:
+        # Task is still pending
+        return jsonify({'status': 'Running'})

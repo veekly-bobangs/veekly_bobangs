@@ -12,15 +12,15 @@ services:
     depends_on:
       - redis
       - selenium-chrome
-  flower:
-    build:
-      context: ./backend/deal-service
-      dockerfile: Dockerfile.flower
-    ports:
-      - "5555:5555"
-    depends_on:
-      - redis
-      - celery-worker
+  # flower:
+  #   build:
+  #     context: ./backend/deal-service
+  #     dockerfile: Dockerfile.flower
+  #   ports:
+  #     - "5555:5555"
+  #   depends_on:
+  #     - redis
+  #     - celery-worker
   redis:
     image: "redis:alpine"
     ports:

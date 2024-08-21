@@ -1,21 +1,40 @@
-FROM --platform=linux/amd64 python:3.10-slim-buster
+# Builder stage
+FROM python:3.10-slim-buster AS builder
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev gcc
+
+# Create venv
+RUN python -m venv /opt/venv
+# Active venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Operational stage
+FROM python:3.10-slim-buster
+
+RUN apt-get update && \
+    apt-get install -y libpq-dev && \
+    rm -rf  /var/lib/apt/lists/*
+
+# Get venv from builder stage
+COPY --from=builder /opt/venv /opt/venv
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /app
+
+COPY . /app/
 
 ENV CELERY_BROKER_URL redis://redis:6379/0
 ENV CELERY_RESULT_BACKEND redis://redis:6379/0
 ENV SELENIUM_URL http://selenium-chrome:4444/wd/hub
 ENV REDIS_URL redis
 
-# Set the working directory
-WORKDIR /app
-
-# Copy the requirements.txt file and install Python dependencies
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy your Flask application code to the container
-COPY . .
-
 WORKDIR /app/src
 
-# Command to run the Celery worker
-CMD celery -A app.celery worker -B --loglevel=info
+CMD celery -A app.celery_app worker -B --loglevel=info
