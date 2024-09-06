@@ -2,7 +2,7 @@ import React from 'react';
 import { Carousel } from '@mantine/carousel';
 import { Paper, Text, Group, Stack, Title } from '@mantine/core';
 import { IconCalendar, IconTag, IconCash, IconClock } from '@tabler/icons-react';
-import {  Voucher } from '@/types';
+import type { Voucher } from '@/types';
 
 interface VouchersDisplayProps {
   vouchers: Voucher[];
