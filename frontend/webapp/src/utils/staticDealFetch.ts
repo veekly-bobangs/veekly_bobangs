@@ -1,4 +1,4 @@
-import { API_ENDPOINTS } from '@/constants';
+import { API_ENDPOINTS } from '@/constants/index';
 import { Deal } from '@/types';
 
 export interface DealsFetchReturnType {
