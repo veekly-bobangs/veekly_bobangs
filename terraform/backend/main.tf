@@ -15,7 +15,7 @@ provider "aws" {
 
 resource "aws_instance" "veekly_be_server" {
   ami           = "ami-0497a974f8d5dcef8"
-  instance_type = "t2.micro"
+  instance_type = "t3a.small"
 
   key_name = "peerprep"
 
