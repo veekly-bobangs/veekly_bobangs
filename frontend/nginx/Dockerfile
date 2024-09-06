@@ -3,10 +3,6 @@ FROM nginx:1.19.7-alpine
 # Add bash for boot cmd
 RUN apk add bash
 
-COPY nginx-selfsigned.crt /etc/nginx/ssl/nginx-selfsigned.crt
-COPY nginx-selfsigned.key /etc/nginx/ssl/nginx-selfsigned.key
-RUN chmod 644 /etc/nginx/ssl/nginx-selfsigned.key
-
 # Add nginx.conf to container
 COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx:nginx start.sh /app/start.sh
