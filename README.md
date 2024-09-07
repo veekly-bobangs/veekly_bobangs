@@ -48,6 +48,24 @@ Our solution will allow users to view food deals nearby them, in the form of a l
 
 **Locally push to docker hub (this part is integrated to GH Actions- FYI for manual version)**
 
+Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` into dockerfile.prod (nextjs public env vars are built into the html in build time)
+
+```
+# Rebuild the source code only when needed
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+ENV NEXT_PUBLIC_SUPABASE_URL ...
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY ...
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV DOCKER_BUILD 1
+
+RUN npm run build
+
+```
+
 `docker build -t bokuan/veekly-bobangs-clockbox:latest . -f .\Dockerfile.prod`
 
 `docker login`
