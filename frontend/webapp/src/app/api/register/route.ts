@@ -1,6 +1,5 @@
 import { API_ENDPOINTS } from "@/constants";
 import { createClient } from "@/utils/supabase/server";
-import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -22,12 +21,12 @@ export async function POST(request: NextRequest) {
 
     // logic
     const supabase = createClient();
-    const origin = headers().get("origin");
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${origin}${API_ENDPOINTS.AUTH_CALLBACK}`
+        emailRedirectTo: `${process.env.EMAIL_REDIR_URL}${API_ENDPOINTS.AUTH_CALLBACK}`
       }
     });
 
