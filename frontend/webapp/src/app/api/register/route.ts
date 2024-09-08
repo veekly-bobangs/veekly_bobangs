@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.EMAIL_REDIR_URL}${API_ENDPOINTS.AUTH_CALLBACK}`
+        emailRedirectTo: `${process.env.EMAIL_REDIR_URL || "http://localhost:3001"}${API_ENDPOINTS.AUTH_CALLBACK}`
       }
     });
 
