@@ -15,6 +15,7 @@ services:
       - ./frontend/certbot/conf/:/etc/nginx/ssl/:ro
     environment: 
       - WEB_APP_ADDR=web-app:3001
+      - EMAIL_REDIR_URL=https://weekly-lobangs.mooo.com
     ports:
       - "80:80"
       - "443:443"
