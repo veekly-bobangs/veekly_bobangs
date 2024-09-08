@@ -6,6 +6,7 @@ services:
       - "3001:3001"
     environment:
       - API_URL=http://192.168.1.203:8000
+      - EMAIL_REDIR_URL=https://weekly-lobangs.mooo.com
   nginx-web-app:
     build: ./frontend/nginx
     restart: always
@@ -15,7 +16,6 @@ services:
       - ./frontend/certbot/conf/:/etc/nginx/ssl/:ro
     environment: 
       - WEB_APP_ADDR=web-app:3001
-      - EMAIL_REDIR_URL=https://weekly-lobangs.mooo.com
     ports:
       - "80:80"
       - "443:443"

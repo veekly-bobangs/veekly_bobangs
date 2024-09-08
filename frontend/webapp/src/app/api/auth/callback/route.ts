@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   // https://supabase.com/docs/guides/auth/server-side/nextjs
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const origin = requestUrl.origin;
+  const origin = process.env.EMAIL_REDIR_URL || "http://localhost:3001";
 
   if (code) {
     const supabase = createClient();
